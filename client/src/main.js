@@ -6,6 +6,7 @@ import 'vuetify/dist/vuetify.min.css'
 import ru from 'vuetify/es5/locale/ru'
 import App from './App.vue'
 import router from './router'
+import VueGoogleCharts from 'vue-google-charts'
 
 Vue.use(Vuetify, {
     customProperties: true,
@@ -15,6 +16,8 @@ Vue.use(Vuetify, {
         current: 'ru'
     }
 });
+
+Vue.use(VueGoogleCharts)
 
 Vue.config.productionTip = false;
 
