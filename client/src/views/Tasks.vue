@@ -34,38 +34,68 @@
                         v-model="selectDiff"
                         :items="items"
                         label="Выберите сложность"
+                        @change="$router.push('/tasks/4/6/5')"
                 />
             </v-flex>
         </v-layout>
 
         <v-layout>
             <v-flex
+                    v-if="$route.params.difficulty"
                     xs12
                     class="px-2">
                 <v-card>
-                    <v-img
-                            src="https://cdn.vuetifyjs.com/images/cards/desert.jpg"
-                            aspect-ratio="2.75"
-                    />
-
                     <v-card-title primary-title>
-                        <div>
-                            <h3 class="headline mb-0">Kangaroo Valley Safari</h3>
-                            <div>Located two hours south of Sydney in the <br>Southern Highlands of New South Wales, ...
-                            </div>
-                            <div>{{ $route.params.category_id }}</div>
-                        </div>
+                        <h3 class="headline mb-0">Нахождение гипотенузы треугольника</h3>
                     </v-card-title>
+
+                    <v-card-text>
+                        <img src="http://docs.likenul.com/pars_docs/refs/19/18704/18704_html_538f9f8f.png"
+                               style="float:right; max-width:300px; max-height:300px"
+                        >
+
+
+                        <p style="text-align: justify">
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab commodi ex natus quos ratione suscipit. Consequuntur facere labore magnam officia! Aliquid ea eligendi enim et eveniet fugiat qui vero, voluptas? Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab commodi ex natus quos ratione suscipit. Consequuntur facere labore magnam officia! Aliquid ea eligendi enim et eveniet fugiat qui vero, voluptas? Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab commodi ex natus quos ratione suscipit. Consequuntur facere labore magnam officia! Aliquid ea eligendi enim et eveniet fugiat qui vero, voluptas?Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab commodi ex natus quos ratione suscipit. Consequuntur facere labore magnam officia! Aliquid ea eligendi enim et eveniet fugiat qui vero, voluptas? Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab commodi ex natus quos ratione suscipit. Consequuntur facere labore magnam officia! Aliquid ea eligendi enim et eveniet fugiat qui vero, voluptas? Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab commodi ex natus quos ratione suscipit. Consequuntur facere labore magnam officia! Aliquid ea eligendi enim et eveniet fugiat qui vero, voluptas?
+                        </p>
+
+                        <div style="clear:both;"></div>
+
+
+                        <v-text-field
+                                placeholder="1.2"
+                                label="Ответ на задачу"
+                                >
+                        </v-text-field>
+                    </v-card-text>
+
 
                     <v-card-actions>
                         <v-btn
+                                v-if="!gotSolution"
                                 flat
-                                color="orange">Share
+                                color="orange">Отправить ответ
                         </v-btn>
                         <v-btn
                                 flat
-                                color="orange">Explore
+                                color="orange"
+                        @click="gotSolution = true"
+                        >Узнать решение
                         </v-btn>
+                    </v-card-actions>
+                </v-card>
+
+                <v-card v-if="gotSolution">
+                    <v-card-text>
+                        <p>
+                            Квадрат гипотенузы равен сумме квадратов катетов!
+                        </p>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-btn
+                                color="orange"
+                                flat
+                        >Следующая задача</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-flex>
@@ -88,7 +118,8 @@
                     'Design',
                     'Vue',
                     'Vuetify'
-                ]
+                ],
+                gotSolution: false,
             }
         }
     }
