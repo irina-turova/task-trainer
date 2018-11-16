@@ -6,15 +6,20 @@ buildscript {
     
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath group: 'org.apache.cayenne.plugins', name: 'cayenne-gradle-plugin', version: '4.0'
+        classpath 'mysql:mysql-connector-java:5.1.46'
     }
 }
 
 apply plugin: 'kotlin'
 apply plugin: 'application'
+apply plugin: 'org.apache.cayenne'
 
 group 'trainer'
 version '0.0.1'
 mainClassName = "io.ktor.server.netty.EngineMain"
+
+cayenne.defaultDataMap 'resources/datamap.map.xml'
 
 sourceSets {
     main.kotlin.srcDirs = main.java.srcDirs = ['src']
@@ -41,6 +46,93 @@ dependencies {
     compile "io.ktor:ktor-client-core:$ktor_version"
     compile "io.ktor:ktor-client-core-jvm:$ktor_version"
     compile "io.ktor:ktor-client-apache:$ktor_version"
+    // https://mvnrepository.com/artifact/mysql/mysql-connector-java
+    compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.46'
+
     testCompile "io.ktor:ktor-server-tests:$ktor_version"
     testCompile "io.ktor:ktor-client-mock:$ktor_version"
+    compile cayenne.dependency('server')
+    compile cayenne.dependency('java8')
 }
+
+cgen {
+    client = false
+    mode = 'all'
+    overwrite = true
+    // createPropertiesNames = true
+}
+
+cdbimport {
+    // map can be skipped if it is defined in cayenne.defaultDataMap
+
+    dataSource {
+        driver 'com.mysql.jdbc.Driver'
+        url 'jdbc:mysql://46.229.215.196:3306/trainer?useSSL=false&allowPublicKeyRetrieval=true'
+        username 'root'
+        password 'root'
+    }
+
+    dbImport {
+        // additional settings
+        usePrimitives false
+        defaultPackage 'apache.cayenne.mappings'
+
+        // DB filter configuration
+        catalog 'trainer'
+
+//    catalog {
+//        name 'catalog-2'
+//
+//        includeTable 'table0', {
+//            excludeColumns '_column_'
+//        }
+//
+//        includeTables 'table1', 'table2', 'table3'
+//
+//        includeTable 'table4', {
+//            includeColumns 'id', 'type', 'data'
+//        }
+//
+//        excludeTable '^GENERATED_.*'
+//    }
+//
+//    catalog {
+//        name 'catalog-3'
+//        schema {
+//            name 'schema-2'
+//            includeTable 'test_table'
+//            includeTable 'test_table2', {
+//                excludeColumn '__excluded'
+//            }
+//        }
+//    }
+//
+//    includeProcedure 'procedure_test_1'
+//
+//    includeColumns 'id', 'version'
+
+        tableTypes 'TABLE', 'VIEW'
+    }
+}
+
+cdbgen {
+
+    adapter 'org.apache.cayenne.dba.mysql.MySQLAdapter'
+
+    dataSource {
+        driver 'com.mysql.cj.jdbc.Driver'
+        url 'jdbc:mysql://46.229.215.196:3306/trainer?useSSL=false&allowPublicKeyRetrieval=true'
+        username 'root'
+        password 'root'
+    }
+
+    dropTables true
+    dropPK true
+
+    createTables true
+    createPK true
+    createFK true
+}
+
+cgen.dependsOn cdbimport
+compileKotlin.dependsOn cgen

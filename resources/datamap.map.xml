@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data-map xmlns="http://cayenne.apache.org/schema/9/modelMap"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	 xsi:schemaLocation="http://cayenne.apache.org/schema/9/modelMap https://cayenne.apache.org/schema/9/modelMap.xsd"
+	 project-version="9">
+	<property name="defaultPackage" value="apache.cayenne.mappings"/>
+	<property name="defaultCatalog" value="trainer"/>
+	<db-entity name="Difficulty" catalog="trainer">
+		<db-attribute name="Description" type="LONGVARCHAR" length="16777215"/>
+		<db-attribute name="Name" type="VARCHAR" length="100"/>
+		<db-attribute name="primaryKey" type="INTEGER" isPrimaryKey="true" isGenerated="true" isMandatory="true" length="10"/>
+	</db-entity>
+	<db-entity name="Image" catalog="trainer">
+		<db-attribute name="Description" type="LONGVARCHAR" length="16777215"/>
+		<db-attribute name="Name" type="VARCHAR" length="100"/>
+		<db-attribute name="primaryKey" type="INTEGER" isPrimaryKey="true" isGenerated="true" isMandatory="true" length="10"/>
+	</db-entity>
+	<db-entity name="Role" catalog="trainer">
+		<db-attribute name="Description" type="LONGVARCHAR" length="16777215"/>
+		<db-attribute name="Name" type="VARCHAR" length="100"/>
+		<db-attribute name="primaryKey" type="INTEGER" isPrimaryKey="true" isGenerated="true" isMandatory="true" length="10"/>
+	</db-entity>
+	<db-entity name="Solution" catalog="trainer">
+		<db-attribute name="ActualAnswer" type="VARCHAR" length="100"/>
+		<db-attribute name="SolutionDateTime" type="TIMESTAMP" length="19"/>
+		<db-attribute name="Task" type="INTEGER" length="10"/>
+		<db-attribute name="User" type="INTEGER" length="10"/>
+		<db-attribute name="primaryKey" type="INTEGER" isPrimaryKey="true" isGenerated="true" isMandatory="true" length="10"/>
+	</db-entity>
+	<db-entity name="Subtheme" catalog="trainer">
+		<db-attribute name="Description" type="LONGVARCHAR" length="16777215"/>
+		<db-attribute name="Name" type="VARCHAR" length="100"/>
+		<db-attribute name="Theme" type="INTEGER" length="10"/>
+		<db-attribute name="primaryKey" type="INTEGER" isPrimaryKey="true" isGenerated="true" isMandatory="true" length="10"/>
+	</db-entity>
+	<db-entity name="Task" catalog="trainer">
+		<db-attribute name="AnswerImage" type="INTEGER" length="10"/>
+		<db-attribute name="Author" type="INTEGER" length="10"/>
+		<db-attribute name="Difficulty" type="INTEGER" length="10"/>
+		<db-attribute name="Explanation" type="LONGVARCHAR" length="16777215"/>
+		<db-attribute name="Name" type="VARCHAR" length="100"/>
+		<db-attribute name="RightAnswer" type="VARCHAR" length="100"/>
+		<db-attribute name="Subtheme" type="INTEGER" length="10"/>
+		<db-attribute name="TaskImage" type="INTEGER" length="10"/>
+		<db-attribute name="Text" type="LONGVARCHAR" length="16777215"/>
+		<db-attribute name="primaryKey" type="INTEGER" isPrimaryKey="true" isGenerated="true" isMandatory="true" length="10"/>
+	</db-entity>
+	<db-entity name="Theme" catalog="trainer">
+		<db-attribute name="Description" type="LONGVARCHAR" length="16777215"/>
+		<db-attribute name="Name" type="VARCHAR" length="100"/>
+		<db-attribute name="primaryKey" type="INTEGER" isPrimaryKey="true" isGenerated="true" isMandatory="true" length="10"/>
+	</db-entity>
+	<db-entity name="User" catalog="trainer">
+		<db-attribute name="FirstName" type="VARCHAR" length="100"/>
+		<db-attribute name="LastName" type="VARCHAR" length="100"/>
+		<db-attribute name="Login" type="VARCHAR" length="100"/>
+		<db-attribute name="MiddleName" type="VARCHAR" length="100"/>
+		<db-attribute name="Password" type="VARCHAR" length="100"/>
+		<db-attribute name="Rating" type="DOUBLE" length="22"/>
+		<db-attribute name="Role" type="INTEGER" length="10"/>
+		<db-attribute name="primaryKey" type="INTEGER" isPrimaryKey="true" isGenerated="true" isMandatory="true" length="10"/>
+	</db-entity>
+	<obj-entity name="Difficulty" className="apache.cayenne.mappings.Difficulty" dbEntityName="Difficulty">
+		<obj-attribute name="description" type="java.lang.String" db-attribute-path="Description"/>
+		<obj-attribute name="name" type="java.lang.String" db-attribute-path="Name"/>
+	</obj-entity>
+	<obj-entity name="Image" className="apache.cayenne.mappings.Image" dbEntityName="Image">
+		<obj-attribute name="description" type="java.lang.String" db-attribute-path="Description"/>
+		<obj-attribute name="name" type="java.lang.String" db-attribute-path="Name"/>
+	</obj-entity>
+	<obj-entity name="Role" className="apache.cayenne.mappings.Role" dbEntityName="Role">
+		<obj-attribute name="description" type="java.lang.String" db-attribute-path="Description"/>
+		<obj-attribute name="name" type="java.lang.String" db-attribute-path="Name"/>
+	</obj-entity>
+	<obj-entity name="Solution" className="apache.cayenne.mappings.Solution" dbEntityName="Solution">
+		<obj-attribute name="actualAnswer" type="java.lang.String" db-attribute-path="ActualAnswer"/>
+		<obj-attribute name="solutionDateTime" type="java.time.LocalDateTime" db-attribute-path="SolutionDateTime"/>
+		<obj-attribute name="task" type="java.lang.Integer" db-attribute-path="Task"/>
+		<obj-attribute name="user" type="java.lang.Integer" db-attribute-path="User"/>
+	</obj-entity>
+	<obj-entity name="Subtheme" className="apache.cayenne.mappings.Subtheme" dbEntityName="Subtheme">
+		<obj-attribute name="description" type="java.lang.String" db-attribute-path="Description"/>
+		<obj-attribute name="name" type="java.lang.String" db-attribute-path="Name"/>
+		<obj-attribute name="theme" type="java.lang.Integer" db-attribute-path="Theme"/>
+	</obj-entity>
+	<obj-entity name="Task" className="apache.cayenne.mappings.Task" dbEntityName="Task">
+		<obj-attribute name="answerImage" type="java.lang.Integer" db-attribute-path="AnswerImage"/>
+		<obj-attribute name="author" type="java.lang.Integer" db-attribute-path="Author"/>
+		<obj-attribute name="difficulty" type="java.lang.Integer" db-attribute-path="Difficulty"/>
+		<obj-attribute name="explanation" type="java.lang.String" db-attribute-path="Explanation"/>
+		<obj-attribute name="name" type="java.lang.String" db-attribute-path="Name"/>
+		<obj-attribute name="rightAnswer" type="java.lang.String" db-attribute-path="RightAnswer"/>
+		<obj-attribute name="subtheme" type="java.lang.Integer" db-attribute-path="Subtheme"/>
+		<obj-attribute name="taskImage" type="java.lang.Integer" db-attribute-path="TaskImage"/>
+		<obj-attribute name="text" type="java.lang.String" db-attribute-path="Text"/>
+	</obj-entity>
+	<obj-entity name="Theme" className="apache.cayenne.mappings.Theme" dbEntityName="Theme">
+		<obj-attribute name="description" type="java.lang.String" db-attribute-path="Description"/>
+		<obj-attribute name="name" type="java.lang.String" db-attribute-path="Name"/>
+	</obj-entity>
+	<obj-entity name="User" className="apache.cayenne.mappings.User" dbEntityName="User">
+		<obj-attribute name="firstName" type="java.lang.String" db-attribute-path="FirstName"/>
+		<obj-attribute name="lastName" type="java.lang.String" db-attribute-path="LastName"/>
+		<obj-attribute name="login" type="java.lang.String" db-attribute-path="Login"/>
+		<obj-attribute name="middleName" type="java.lang.String" db-attribute-path="MiddleName"/>
+		<obj-attribute name="password" type="java.lang.String" db-attribute-path="Password"/>
+		<obj-attribute name="rating" type="java.lang.Double" db-attribute-path="Rating"/>
+		<obj-attribute name="role" type="java.lang.Integer" db-attribute-path="Role"/>
+	</obj-entity>
+	<db-relationship name="tasks" source="Difficulty" target="Task" toMany="true">
+	</db-relationship>
+	<db-relationship name="tasks" source="Image" target="Task" toMany="true">
+	</db-relationship>
+	<db-relationship name="tasks1" source="Image" target="Task" toMany="true">
+	</db-relationship>
+	<db-relationship name="users" source="Role" target="User" toMany="true">
+	</db-relationship>
+	<db-relationship name="task" source="Solution" target="Task" toMany="false">
+	</db-relationship>
+	<db-relationship name="user" source="Solution" target="User" toMany="false">
+	</db-relationship>
+	<db-relationship name="tasks" source="Subtheme" target="Task" toMany="true">
+	</db-relationship>
+	<db-relationship name="theme" source="Subtheme" target="Theme" toMany="false">
+	</db-relationship>
+	<db-relationship name="difficulty" source="Task" target="Difficulty" toMany="false">
+	</db-relationship>
+	<db-relationship name="image" source="Task" target="Image" toMany="false">
+	</db-relationship>
+	<db-relationship name="image1" source="Task" target="Image" toMany="false">
+	</db-relationship>
+	<db-relationship name="solutions" source="Task" target="Solution" toMany="true">
+	</db-relationship>
+	<db-relationship name="subtheme" source="Task" target="Subtheme" toMany="false">
+	</db-relationship>
+	<db-relationship name="user" source="Task" target="User" toMany="false">
+	</db-relationship>
+	<db-relationship name="subthemes" source="Theme" target="Subtheme" toMany="true">
+	</db-relationship>
+	<db-relationship name="role" source="User" target="Role" toMany="false">
+	</db-relationship>
+	<db-relationship name="solutions" source="User" target="Solution" toMany="true">
+	</db-relationship>
+	<db-relationship name="tasks" source="User" target="Task" toMany="true">
+	</db-relationship>
+	<obj-relationship name="tasks" source="Difficulty" target="Task" deleteRule="Deny" db-relationship-path="tasks"/>
+	<obj-relationship name="tasks" source="Image" target="Task" deleteRule="Deny" db-relationship-path="tasks"/>
+	<obj-relationship name="tasks1" source="Image" target="Task" deleteRule="Deny" db-relationship-path="tasks1"/>
+	<obj-relationship name="users" source="Role" target="User" deleteRule="Deny" db-relationship-path="users"/>
+	<obj-relationship name="task1" source="Solution" target="Task" deleteRule="Nullify" db-relationship-path="task"/>
+	<obj-relationship name="user1" source="Solution" target="User" deleteRule="Nullify" db-relationship-path="user"/>
+	<obj-relationship name="tasks" source="Subtheme" target="Task" deleteRule="Deny" db-relationship-path="tasks"/>
+	<obj-relationship name="theme1" source="Subtheme" target="Theme" deleteRule="Nullify" db-relationship-path="theme"/>
+	<obj-relationship name="difficulty1" source="Task" target="Difficulty" deleteRule="Nullify" db-relationship-path="difficulty"/>
+	<obj-relationship name="image" source="Task" target="Image" deleteRule="Nullify" db-relationship-path="image"/>
+	<obj-relationship name="image1" source="Task" target="Image" deleteRule="Nullify" db-relationship-path="image1"/>
+	<obj-relationship name="solutions" source="Task" target="Solution" deleteRule="Deny" db-relationship-path="solutions"/>
+	<obj-relationship name="subtheme1" source="Task" target="Subtheme" deleteRule="Nullify" db-relationship-path="subtheme"/>
+	<obj-relationship name="user" source="Task" target="User" deleteRule="Nullify" db-relationship-path="user"/>
+	<obj-relationship name="subthemes" source="Theme" target="Subtheme" deleteRule="Deny" db-relationship-path="subthemes"/>
+	<obj-relationship name="role1" source="User" target="Role" deleteRule="Nullify" db-relationship-path="role"/>
+	<obj-relationship name="solutions" source="User" target="Solution" deleteRule="Deny" db-relationship-path="solutions"/>
+	<obj-relationship name="tasks" source="User" target="Task" deleteRule="Deny" db-relationship-path="tasks"/>
+</data-map>
