@@ -95,13 +95,13 @@ cdbgen {
         username 'root'
         password 'root'
     }
-
-    dropTables true
-    dropPK true
-
-    createTables true
-    createPK true
-    createFK true
+//
+//    dropTables true
+//    dropPK true
+//
+//    createTables true
+//    createPK true
+//    createFK true
 }
 
 cgen.dependsOn cdbimport

@@ -3,10 +3,12 @@ package apache.cayenne.mappings.auto;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.List;
 
 import org.apache.cayenne.BaseDataObject;
 import org.apache.cayenne.exp.Property;
 
+import apache.cayenne.mappings.Task;
 import apache.cayenne.mappings.Theme;
 
 /**
@@ -22,17 +24,20 @@ public abstract class _Subtheme extends BaseDataObject {
     public static final String NAME_PROPERTY = "name";
     public static final String DESCRIPTION_PROPERTY = "description";
     public static final String THEME_PROPERTY = "theme";
+    public static final String TASKS_PROPERTY = "tasks";
 
     public static final String SUBTHEME_ID_PK_COLUMN = "subtheme_id";
 
     public static final Property<String> NAME = Property.create("name", String.class);
     public static final Property<String> DESCRIPTION = Property.create("description", String.class);
     public static final Property<Theme> THEME = Property.create("theme", Theme.class);
+    public static final Property<List<Task>> TASKS = Property.create("tasks", List.class);
 
     protected String name;
     protected String description;
 
     protected Object theme;
+    protected Object tasks;
 
     public void setName(String name) {
         beforePropertyWrite("name", this.name, name);
@@ -62,6 +67,19 @@ public abstract class _Subtheme extends BaseDataObject {
         return (Theme)readProperty("theme");
     }
 
+    public void addToTasks(Task obj) {
+        addToManyTarget("tasks", obj, true);
+    }
+
+    public void removeFromTasks(Task obj) {
+        removeToManyTarget("tasks", obj, true);
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<Task> getTasks() {
+        return (List<Task>)readProperty("tasks");
+    }
+
     @Override
     public Object readPropertyDirectly(String propName) {
         if(propName == null) {
@@ -75,6 +93,8 @@ public abstract class _Subtheme extends BaseDataObject {
                 return this.description;
             case "theme":
                 return this.theme;
+            case "tasks":
+                return this.tasks;
             default:
                 return super.readPropertyDirectly(propName);
         }
@@ -96,6 +116,9 @@ public abstract class _Subtheme extends BaseDataObject {
             case "theme":
                 this.theme = val;
                 break;
+            case "tasks":
+                this.tasks = val;
+                break;
             default:
                 super.writePropertyDirectly(propName, val);
         }
@@ -115,6 +138,7 @@ public abstract class _Subtheme extends BaseDataObject {
         out.writeObject(this.name);
         out.writeObject(this.description);
         out.writeObject(this.theme);
+        out.writeObject(this.tasks);
     }
 
     @Override
@@ -123,6 +147,7 @@ public abstract class _Subtheme extends BaseDataObject {
         this.name = (String)in.readObject();
         this.description = (String)in.readObject();
         this.theme = in.readObject();
+        this.tasks = in.readObject();
     }
 
 }

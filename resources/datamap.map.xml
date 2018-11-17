@@ -59,7 +59,7 @@
 		<db-attribute name="Password" type="VARCHAR" length="100"/>
 		<db-attribute name="Rating" type="DOUBLE" length="22"/>
 		<db-attribute name="Role" type="INTEGER" length="10"/>
-		<db-attribute name="primaryKey" type="INTEGER" isPrimaryKey="true" isGenerated="true" isMandatory="true" length="10"/>
+		<db-attribute name="user_id" type="INTEGER" isPrimaryKey="true" isGenerated="true" isMandatory="true" length="10"/>
 	</db-entity>
 	<obj-entity name="Difficulty" className="apache.cayenne.mappings.Difficulty" dbEntityName="Difficulty">
 		<obj-attribute name="name" type="java.lang.String" db-attribute-path="Name"/>
@@ -76,7 +76,6 @@
 	<obj-entity name="Solution" className="apache.cayenne.mappings.Solution" dbEntityName="Solution">
 		<obj-attribute name="actualAnswer" type="java.lang.String" db-attribute-path="ActualAnswer"/>
 		<obj-attribute name="solutionDateTime" type="java.time.LocalDateTime" db-attribute-path="SolutionDateTime"/>
-		<obj-attribute name="user" type="java.lang.Integer" db-attribute-path="User"/>
 	</obj-entity>
 	<obj-entity name="Subtheme" className="apache.cayenne.mappings.Subtheme" dbEntityName="Subtheme">
 		<obj-attribute name="name" type="java.lang.String" db-attribute-path="Name"/>
@@ -87,8 +86,6 @@
 		<obj-attribute name="text" type="java.lang.String" db-attribute-path="Text"/>
 		<obj-attribute name="rightAnswer" type="java.lang.String" db-attribute-path="RightAnswer"/>
 		<obj-attribute name="explanation" type="java.lang.String" db-attribute-path="Explanation"/>
-		<obj-attribute name="subtheme" type="java.lang.Integer" db-attribute-path="Subtheme"/>
-		<obj-attribute name="author" type="java.lang.Integer" db-attribute-path="Author"/>
 	</obj-entity>
 	<obj-entity name="Theme" className="apache.cayenne.mappings.Theme" dbEntityName="Theme">
 		<obj-attribute name="name" type="java.lang.String" db-attribute-path="Name"/>
@@ -117,8 +114,14 @@
 	<db-relationship name="task" source="Solution" target="Task">
 		<db-attribute-pair source="Task" target="task_id"/>
 	</db-relationship>
+	<db-relationship name="user" source="Solution" target="User">
+		<db-attribute-pair source="User" target="user_id"/>
+	</db-relationship>
 	<db-relationship name="theme" source="Subtheme" target="Theme">
 		<db-attribute-pair source="Theme" target="theme_id"/>
+	</db-relationship>
+	<db-relationship name="tasks" source="Subtheme" target="Task" toMany="true">
+		<db-attribute-pair source="subtheme_id" target="Subtheme"/>
 	</db-relationship>
 	<db-relationship name="solutions" source="Task" target="Solution" toMany="true">
 		<db-attribute-pair source="task_id" target="Task"/>
@@ -132,24 +135,42 @@
 	<db-relationship name="difficulty" source="Task" target="Difficulty">
 		<db-attribute-pair source="Difficulty" target="difficulty_id"/>
 	</db-relationship>
+	<db-relationship name="user" source="Task" target="User">
+		<db-attribute-pair source="Author" target="user_id"/>
+	</db-relationship>
+	<db-relationship name="subtheme" source="Task" target="Subtheme">
+		<db-attribute-pair source="Subtheme" target="subtheme_id"/>
+	</db-relationship>
 	<db-relationship name="subthemes" source="Theme" target="Subtheme" toMany="true">
 		<db-attribute-pair source="theme_id" target="Theme"/>
 	</db-relationship>
 	<db-relationship name="role" source="User" target="Role">
 		<db-attribute-pair source="Role" target="role_id"/>
 	</db-relationship>
+	<db-relationship name="solutions" source="User" target="Solution" toMany="true">
+		<db-attribute-pair source="user_id" target="User"/>
+	</db-relationship>
+	<db-relationship name="tasks" source="User" target="Task" toMany="true">
+		<db-attribute-pair source="user_id" target="Author"/>
+	</db-relationship>
 	<obj-relationship name="tasks" source="Difficulty" target="Task" deleteRule="Deny" db-relationship-path="tasks"/>
 	<obj-relationship name="tasks" source="Image" target="Task" deleteRule="Deny" db-relationship-path="tasks"/>
 	<obj-relationship name="tasks1" source="Image" target="Task" deleteRule="Deny" db-relationship-path="tasks1"/>
 	<obj-relationship name="users" source="Role" target="User" deleteRule="Deny" db-relationship-path="users"/>
 	<obj-relationship name="task" source="Solution" target="Task" deleteRule="Nullify" db-relationship-path="task"/>
+	<obj-relationship name="user1" source="Solution" target="User" deleteRule="Nullify" db-relationship-path="user"/>
 	<obj-relationship name="theme" source="Subtheme" target="Theme" deleteRule="Nullify" db-relationship-path="theme"/>
+	<obj-relationship name="tasks" source="Subtheme" target="Task" deleteRule="Deny" db-relationship-path="tasks"/>
 	<obj-relationship name="solutions" source="Task" target="Solution" deleteRule="Deny" db-relationship-path="solutions"/>
 	<obj-relationship name="image" source="Task" target="Image" deleteRule="Nullify" db-relationship-path="image"/>
 	<obj-relationship name="image1" source="Task" target="Image" deleteRule="Nullify" db-relationship-path="image1"/>
 	<obj-relationship name="difficulty" source="Task" target="Difficulty" deleteRule="Nullify" db-relationship-path="difficulty"/>
+	<obj-relationship name="user" source="Task" target="User" deleteRule="Nullify" db-relationship-path="user"/>
+	<obj-relationship name="subtheme1" source="Task" target="Subtheme" deleteRule="Nullify" db-relationship-path="subtheme"/>
 	<obj-relationship name="subthemes" source="Theme" target="Subtheme" deleteRule="Deny" db-relationship-path="subthemes"/>
 	<obj-relationship name="role" source="User" target="Role" deleteRule="Nullify" db-relationship-path="role"/>
+	<obj-relationship name="solutions" source="User" target="Solution" deleteRule="Deny" db-relationship-path="solutions"/>
+	<obj-relationship name="tasks" source="User" target="Task" deleteRule="Deny" db-relationship-path="tasks"/>
 	<config xmlns="http://cayenne.apache.org/schema/10/dbimport">
 		<forceDataMapCatalog>false</forceDataMapCatalog>
 		<forceDataMapSchema>false</forceDataMapSchema>
