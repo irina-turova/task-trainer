@@ -1,11 +1,8 @@
 package apache.cayenne.mappings.auto;
 
-import java.util.List;
-
 import org.apache.cayenne.CayenneDataObject;
 import org.apache.cayenne.exp.Property;
 
-import apache.cayenne.mappings.Task;
 import apache.cayenne.mappings.Theme;
 
 /**
@@ -18,13 +15,15 @@ public abstract class _Subtheme extends CayenneDataObject {
 
     private static final long serialVersionUID = 1L; 
 
-    public static final String PRIMARY_KEY_PK_COLUMN = "primaryKey";
+    public static final String DESCRIPTION_PROPERTY = "description";
+    public static final String NAME_PROPERTY = "name";
+    public static final String THEME_PROPERTY = "theme";
+
+    public static final String SUBTHEME_ID_PK_COLUMN = "subtheme_id";
 
     public static final Property<String> DESCRIPTION = Property.create("description", String.class);
     public static final Property<String> NAME = Property.create("name", String.class);
-    public static final Property<Integer> THEME = Property.create("theme", Integer.class);
-    public static final Property<List<Task>> TASKS = Property.create("tasks", List.class);
-    public static final Property<Theme> THEME1 = Property.create("theme1", Theme.class);
+    public static final Property<Theme> THEME = Property.create("theme", Theme.class);
 
     public void setDescription(String description) {
         writeProperty("description", description);
@@ -40,31 +39,12 @@ public abstract class _Subtheme extends CayenneDataObject {
         return (String)readProperty("name");
     }
 
-    public void setTheme(Integer theme) {
-        writeProperty("theme", theme);
-    }
-    public Integer getTheme() {
-        return (Integer)readProperty("theme");
+    public void setTheme(Theme theme) {
+        setToOneTarget("theme", theme, true);
     }
 
-    public void addToTasks(Task obj) {
-        addToManyTarget("tasks", obj, true);
-    }
-    public void removeFromTasks(Task obj) {
-        removeToManyTarget("tasks", obj, true);
-    }
-    @SuppressWarnings("unchecked")
-    public List<Task> getTasks() {
-        return (List<Task>)readProperty("tasks");
-    }
-
-
-    public void setTheme1(Theme theme1) {
-        setToOneTarget("theme1", theme1, true);
-    }
-
-    public Theme getTheme1() {
-        return (Theme)readProperty("theme1");
+    public Theme getTheme() {
+        return (Theme)readProperty("theme");
     }
 
 

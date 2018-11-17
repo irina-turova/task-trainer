@@ -8,9 +8,12 @@
                     class="px-2">
                 <v-combobox
                         v-model="selectCat"
-                        :items="items"
+                        :items="themes"
+                        item-text="values.description"
+                        item-value="values.name"
+                        :loading="themesLoading"
                         label="Выберите категорию"
-                        @change="$router.push('/tasks/4')"
+                        @change="$router.push(`/tasks/${selectCat.values.name}`)"
                 />
             </v-flex>
 
@@ -105,6 +108,8 @@
 </template>
 
 <script>
+    import axios from 'axios'
+
     export default {
         name: 'Tasks',
 
@@ -119,11 +124,59 @@
                     'Vue',
                     'Vuetify'
                 ],
+                themes: [],
+                themesLoading: false,
                 gotSolution: false,
+            }
+        },
+
+        created () {
+            this.fetch()
+        },
+
+        watch: {
+            '$route': 'fetch'
+        },
+
+        methods: {
+            async fetch() {
+                if (!this.$route.params.category_id)
+                    this.getThemes()
+                else
+                    alert('tratata')
+            },
+
+            async getThemes() {
+                this.themesLoading = true
+                try {
+                    let res = await axios.get('/api/themes')
+                    this.themes = res.data;
+                } catch(e) {
+                    if (e.response) {
+                        alert(e.response.data)
+                    } else {
+                        alert(e.message)
+                    }
+                }
+                this.themesLoading = false
+            },
+
+            async getSubthemes() {
+                this.subthemesLoading = true
+                try {
+                    let res = await axios.get('/api/subthemes/${selectCat.values.name}')
+                    this.themes = res.data;
+                } catch(e) {
+                    if (e.response) {
+                        alert(e.response.data)
+                    } else {
+                        alert(e.message)
+                    }
+                }
+                this.subthemesLoading = false
             }
         }
     }
-
 </script>
 
 <style scoped>

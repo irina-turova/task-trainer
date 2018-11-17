@@ -46,6 +46,8 @@ dependencies {
     compile "io.ktor:ktor-client-core:$ktor_version"
     compile "io.ktor:ktor-client-core-jvm:$ktor_version"
     compile "io.ktor:ktor-client-apache:$ktor_version"
+    compile "io.ktor:ktor-gson:$ktor_version"
+
     // https://mvnrepository.com/artifact/mysql/mysql-connector-java
     compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.46'
 
@@ -59,11 +61,10 @@ cgen {
     client = false
     mode = 'all'
     overwrite = true
-    // createPropertiesNames = true
+    createPropertyNames = true
 }
 
 cdbimport {
-    // map can be skipped if it is defined in cayenne.defaultDataMap
 
     dataSource {
         driver 'com.mysql.jdbc.Driver'
@@ -79,37 +80,6 @@ cdbimport {
 
         // DB filter configuration
         catalog 'trainer'
-
-//    catalog {
-//        name 'catalog-2'
-//
-//        includeTable 'table0', {
-//            excludeColumns '_column_'
-//        }
-//
-//        includeTables 'table1', 'table2', 'table3'
-//
-//        includeTable 'table4', {
-//            includeColumns 'id', 'type', 'data'
-//        }
-//
-//        excludeTable '^GENERATED_.*'
-//    }
-//
-//    catalog {
-//        name 'catalog-3'
-//        schema {
-//            name 'schema-2'
-//            includeTable 'test_table'
-//            includeTable 'test_table2', {
-//                excludeColumn '__excluded'
-//            }
-//        }
-//    }
-//
-//    includeProcedure 'procedure_test_1'
-//
-//    includeColumns 'id', 'version'
 
         tableTypes 'TABLE', 'VIEW'
     }

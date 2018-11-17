@@ -8,7 +8,6 @@ import org.apache.cayenne.exp.Property;
 import apache.cayenne.mappings.Difficulty;
 import apache.cayenne.mappings.Image;
 import apache.cayenne.mappings.Solution;
-import apache.cayenne.mappings.Subtheme;
 import apache.cayenne.mappings.User;
 
 /**
@@ -21,43 +20,37 @@ public abstract class _Task extends CayenneDataObject {
 
     private static final long serialVersionUID = 1L; 
 
-    public static final String PRIMARY_KEY_PK_COLUMN = "primaryKey";
+    public static final String AUTHOR_PROPERTY = "author";
+    public static final String EXPLANATION_PROPERTY = "explanation";
+    public static final String NAME_PROPERTY = "name";
+    public static final String RIGHT_ANSWER_PROPERTY = "rightAnswer";
+    public static final String SUBTHEME_PROPERTY = "subtheme";
+    public static final String TEXT_PROPERTY = "text";
+    public static final String DIFFICULTY_PROPERTY = "difficulty";
+    public static final String IMAGE_PROPERTY = "image";
+    public static final String IMAGE1_PROPERTY = "image1";
+    public static final String SOLUTIONS_PROPERTY = "solutions";
+    public static final String USER_PROPERTY = "user";
 
-    public static final Property<Integer> ANSWER_IMAGE = Property.create("answerImage", Integer.class);
+    public static final String TASK_ID_PK_COLUMN = "task_id";
+
     public static final Property<Integer> AUTHOR = Property.create("author", Integer.class);
-    public static final Property<Integer> DIFFICULTY = Property.create("difficulty", Integer.class);
     public static final Property<String> EXPLANATION = Property.create("explanation", String.class);
     public static final Property<String> NAME = Property.create("name", String.class);
     public static final Property<String> RIGHT_ANSWER = Property.create("rightAnswer", String.class);
     public static final Property<Integer> SUBTHEME = Property.create("subtheme", Integer.class);
-    public static final Property<Integer> TASK_IMAGE = Property.create("taskImage", Integer.class);
     public static final Property<String> TEXT = Property.create("text", String.class);
-    public static final Property<Difficulty> DIFFICULTY1 = Property.create("difficulty1", Difficulty.class);
+    public static final Property<Difficulty> DIFFICULTY = Property.create("difficulty", Difficulty.class);
     public static final Property<Image> IMAGE = Property.create("image", Image.class);
     public static final Property<Image> IMAGE1 = Property.create("image1", Image.class);
     public static final Property<List<Solution>> SOLUTIONS = Property.create("solutions", List.class);
-    public static final Property<Subtheme> SUBTHEME1 = Property.create("subtheme1", Subtheme.class);
     public static final Property<User> USER = Property.create("user", User.class);
-
-    public void setAnswerImage(Integer answerImage) {
-        writeProperty("answerImage", answerImage);
-    }
-    public Integer getAnswerImage() {
-        return (Integer)readProperty("answerImage");
-    }
 
     public void setAuthor(Integer author) {
         writeProperty("author", author);
     }
     public Integer getAuthor() {
         return (Integer)readProperty("author");
-    }
-
-    public void setDifficulty(Integer difficulty) {
-        writeProperty("difficulty", difficulty);
-    }
-    public Integer getDifficulty() {
-        return (Integer)readProperty("difficulty");
     }
 
     public void setExplanation(String explanation) {
@@ -88,13 +81,6 @@ public abstract class _Task extends CayenneDataObject {
         return (Integer)readProperty("subtheme");
     }
 
-    public void setTaskImage(Integer taskImage) {
-        writeProperty("taskImage", taskImage);
-    }
-    public Integer getTaskImage() {
-        return (Integer)readProperty("taskImage");
-    }
-
     public void setText(String text) {
         writeProperty("text", text);
     }
@@ -102,12 +88,12 @@ public abstract class _Task extends CayenneDataObject {
         return (String)readProperty("text");
     }
 
-    public void setDifficulty1(Difficulty difficulty1) {
-        setToOneTarget("difficulty1", difficulty1, true);
+    public void setDifficulty(Difficulty difficulty) {
+        setToOneTarget("difficulty", difficulty, true);
     }
 
-    public Difficulty getDifficulty1() {
-        return (Difficulty)readProperty("difficulty1");
+    public Difficulty getDifficulty() {
+        return (Difficulty)readProperty("difficulty");
     }
 
 
@@ -138,15 +124,6 @@ public abstract class _Task extends CayenneDataObject {
     @SuppressWarnings("unchecked")
     public List<Solution> getSolutions() {
         return (List<Solution>)readProperty("solutions");
-    }
-
-
-    public void setSubtheme1(Subtheme subtheme1) {
-        setToOneTarget("subtheme1", subtheme1, true);
-    }
-
-    public Subtheme getSubtheme1() {
-        return (Subtheme)readProperty("subtheme1");
     }
 
 

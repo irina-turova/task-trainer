@@ -19,6 +19,16 @@ public abstract class _User extends CayenneDataObject {
 
     private static final long serialVersionUID = 1L; 
 
+    public static final String FIRST_NAME_PROPERTY = "firstName";
+    public static final String LAST_NAME_PROPERTY = "lastName";
+    public static final String LOGIN_PROPERTY = "login";
+    public static final String MIDDLE_NAME_PROPERTY = "middleName";
+    public static final String PASSWORD_PROPERTY = "password";
+    public static final String RATING_PROPERTY = "rating";
+    public static final String ROLE_PROPERTY = "role";
+    public static final String SOLUTIONS_PROPERTY = "solutions";
+    public static final String TASKS_PROPERTY = "tasks";
+
     public static final String PRIMARY_KEY_PK_COLUMN = "primaryKey";
 
     public static final Property<String> FIRST_NAME = Property.create("firstName", String.class);
@@ -27,8 +37,7 @@ public abstract class _User extends CayenneDataObject {
     public static final Property<String> MIDDLE_NAME = Property.create("middleName", String.class);
     public static final Property<String> PASSWORD = Property.create("password", String.class);
     public static final Property<Double> RATING = Property.create("rating", Double.class);
-    public static final Property<Integer> ROLE = Property.create("role", Integer.class);
-    public static final Property<Role> ROLE1 = Property.create("role1", Role.class);
+    public static final Property<Role> ROLE = Property.create("role", Role.class);
     public static final Property<List<Solution>> SOLUTIONS = Property.create("solutions", List.class);
     public static final Property<List<Task>> TASKS = Property.create("tasks", List.class);
 
@@ -74,19 +83,12 @@ public abstract class _User extends CayenneDataObject {
         return (Double)readProperty("rating");
     }
 
-    public void setRole(Integer role) {
-        writeProperty("role", role);
-    }
-    public Integer getRole() {
-        return (Integer)readProperty("role");
+    public void setRole(Role role) {
+        setToOneTarget("role", role, true);
     }
 
-    public void setRole1(Role role1) {
-        setToOneTarget("role1", role1, true);
-    }
-
-    public Role getRole1() {
-        return (Role)readProperty("role1");
+    public Role getRole() {
+        return (Role)readProperty("role");
     }
 
 

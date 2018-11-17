@@ -17,7 +17,12 @@ public abstract class _Image extends CayenneDataObject {
 
     private static final long serialVersionUID = 1L; 
 
-    public static final String PRIMARY_KEY_PK_COLUMN = "primaryKey";
+    public static final String DESCRIPTION_PROPERTY = "description";
+    public static final String NAME_PROPERTY = "name";
+    public static final String TASKS_PROPERTY = "tasks";
+    public static final String TASKS1_PROPERTY = "tasks1";
+
+    public static final String IMAGE_ID_PK_COLUMN = "image_id";
 
     public static final Property<String> DESCRIPTION = Property.create("description", String.class);
     public static final Property<String> NAME = Property.create("name", String.class);

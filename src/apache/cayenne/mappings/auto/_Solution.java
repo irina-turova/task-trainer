@@ -18,13 +18,18 @@ public abstract class _Solution extends CayenneDataObject {
 
     private static final long serialVersionUID = 1L; 
 
-    public static final String PRIMARY_KEY_PK_COLUMN = "primaryKey";
+    public static final String ACTUAL_ANSWER_PROPERTY = "actualAnswer";
+    public static final String SOLUTION_DATE_TIME_PROPERTY = "solutionDateTime";
+    public static final String USER_PROPERTY = "user";
+    public static final String TASK_PROPERTY = "task";
+    public static final String USER1_PROPERTY = "user1";
+
+    public static final String SOLUTION_ID_PK_COLUMN = "solution_id";
 
     public static final Property<String> ACTUAL_ANSWER = Property.create("actualAnswer", String.class);
     public static final Property<LocalDateTime> SOLUTION_DATE_TIME = Property.create("solutionDateTime", LocalDateTime.class);
-    public static final Property<Integer> TASK = Property.create("task", Integer.class);
     public static final Property<Integer> USER = Property.create("user", Integer.class);
-    public static final Property<Task> TASK1 = Property.create("task1", Task.class);
+    public static final Property<Task> TASK = Property.create("task", Task.class);
     public static final Property<User> USER1 = Property.create("user1", User.class);
 
     public void setActualAnswer(String actualAnswer) {
@@ -41,13 +46,6 @@ public abstract class _Solution extends CayenneDataObject {
         return (LocalDateTime)readProperty("solutionDateTime");
     }
 
-    public void setTask(Integer task) {
-        writeProperty("task", task);
-    }
-    public Integer getTask() {
-        return (Integer)readProperty("task");
-    }
-
     public void setUser(Integer user) {
         writeProperty("user", user);
     }
@@ -55,12 +53,12 @@ public abstract class _Solution extends CayenneDataObject {
         return (Integer)readProperty("user");
     }
 
-    public void setTask1(Task task1) {
-        setToOneTarget("task1", task1, true);
+    public void setTask(Task task) {
+        setToOneTarget("task", task, true);
     }
 
-    public Task getTask1() {
-        return (Task)readProperty("task1");
+    public Task getTask() {
+        return (Task)readProperty("task");
     }
 
 

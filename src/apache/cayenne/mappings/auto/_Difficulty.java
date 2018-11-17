@@ -17,7 +17,11 @@ public abstract class _Difficulty extends CayenneDataObject {
 
     private static final long serialVersionUID = 1L; 
 
-    public static final String PRIMARY_KEY_PK_COLUMN = "primaryKey";
+    public static final String DESCRIPTION_PROPERTY = "description";
+    public static final String NAME_PROPERTY = "name";
+    public static final String TASKS_PROPERTY = "tasks";
+
+    public static final String DIFFICULTY_ID_PK_COLUMN = "difficulty_id";
 
     public static final Property<String> DESCRIPTION = Property.create("description", String.class);
     public static final Property<String> NAME = Property.create("name", String.class);
