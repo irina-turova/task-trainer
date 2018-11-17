@@ -6,7 +6,7 @@ buildscript {
     
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath group: 'org.apache.cayenne.plugins', name: 'cayenne-gradle-plugin', version: '4.0'
+        classpath group: 'org.apache.cayenne.plugins', name: 'cayenne-gradle-plugin', version: '4.1.M2'
         classpath 'mysql:mysql-connector-java:5.1.46'
     }
 }
@@ -54,7 +54,7 @@ dependencies {
     testCompile "io.ktor:ktor-server-tests:$ktor_version"
     testCompile "io.ktor:ktor-client-mock:$ktor_version"
     compile cayenne.dependency('server')
-    compile cayenne.dependency('java8')
+    // compile cayenne.dependency('java8')
 }
 
 cgen {
