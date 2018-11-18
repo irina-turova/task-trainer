@@ -7,13 +7,13 @@
                     xs4
                     class="px-2">
                 <v-combobox
-                        v-model="selectCat"
+                        v-model="selectedTheme"
                         :items="themes"
-                        item-text="values.description"
-                        item-value="values.name"
+                        item-text="description"
+                        item-value="name"
                         :loading="themesLoading"
-                        label="Выберите категорию"
-                        @change="$router.push(`/tasks/${selectCat.values.name}`)"
+                        label="Выберите тему"
+                        @change="$router.push(`/tasks/${selectedTheme.name}`)"
                 />
             </v-flex>
 
@@ -21,35 +21,39 @@
                     xs4
                     class="px-2">
                 <v-combobox
-                        v-if="$route.params.category_id"
-                        v-model="selectSubcat"
-                        :items="items"
-                        label="Выберите подкатегорию"
-                        @change="$router.push('/tasks/4/6')"
+                        v-if="selectedTheme"
+                        v-model="selectedSubtheme"
+                        :items="subthemes"
+                        item-text="description"
+                        item-value="name"
+                        label="Выберите подтему"
+                        @change="$router.push(`/tasks/${selectedTheme.name}/${selectedSubtheme.name}`)"
                 />
             </v-flex>
 
             <v-flex
-                    v-if="$route.params.subcategory_id"
+                    v-if="selectedSubtheme"
                     xs4
                     class="px-2">
                 <v-combobox
-                        v-model="selectDiff"
-                        :items="items"
+                        v-model="selectedDifficulty"
+                        :items="difficulties"
+                        item-text="description"
+                        item-value="name"
                         label="Выберите сложность"
-                        @change="$router.push('/tasks/4/6/5')"
+                        @change="$router.push(`/tasks/${selectedTheme.name}/${selectedSubtheme.name}/${selectedDifficulty.name}`)"
                 />
             </v-flex>
         </v-layout>
 
         <v-layout>
             <v-flex
-                    v-if="$route.params.difficulty"
+                    v-if="task"
                     xs12
                     class="px-2">
                 <v-card>
                     <v-card-title primary-title>
-                        <h3 class="headline mb-0">Нахождение гипотенузы треугольника</h3>
+                        <h3 class="headline mb-0">{{task.name}}</h3>
                     </v-card-title>
 
                     <v-card-text>
@@ -59,7 +63,7 @@
 
 
                         <p style="text-align: justify">
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab commodi ex natus quos ratione suscipit. Consequuntur facere labore magnam officia! Aliquid ea eligendi enim et eveniet fugiat qui vero, voluptas? Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab commodi ex natus quos ratione suscipit. Consequuntur facere labore magnam officia! Aliquid ea eligendi enim et eveniet fugiat qui vero, voluptas? Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab commodi ex natus quos ratione suscipit. Consequuntur facere labore magnam officia! Aliquid ea eligendi enim et eveniet fugiat qui vero, voluptas?Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab commodi ex natus quos ratione suscipit. Consequuntur facere labore magnam officia! Aliquid ea eligendi enim et eveniet fugiat qui vero, voluptas? Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab commodi ex natus quos ratione suscipit. Consequuntur facere labore magnam officia! Aliquid ea eligendi enim et eveniet fugiat qui vero, voluptas? Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab commodi ex natus quos ratione suscipit. Consequuntur facere labore magnam officia! Aliquid ea eligendi enim et eveniet fugiat qui vero, voluptas?
+                            {{task.text}}
                         </p>
 
                         <div style="clear:both;"></div>
@@ -115,17 +119,16 @@
 
         data() {
             return {
-                selectCat: null,
-                selectSubcat: null,
-                selectDiff: null,
-                items: [
-                    'Programming',
-                    'Design',
-                    'Vue',
-                    'Vuetify'
-                ],
-                themes: [],
+                selectedTheme: null,
+                selectedSubtheme: null,
+                selectedDifficulty: null,
+                themes: null,
+                subthemes: null,
+                difficulties: null,
+                task: null,
                 themesLoading: false,
+                subthemesLoading: false,
+                difficultiesLoading: false,
                 gotSolution: false,
             }
         },
@@ -135,15 +138,47 @@
         },
 
         watch: {
-            '$route': 'fetch'
+            '$route': 'fetch',
+            ['$route.params.theme_name'](newVal, oldVal) {
+                // this.subthemes = null
+                // this.selectedSubtheme = null
+                this.getSubthemes()
+            },
+            ['$route.params.subtheme_name'](newVal, oldVal) {
+                this.getDifficulties()
+            },
+            ['$route.params.difficulty_name'](newVal, oldVal) {
+                this.getRandomTask()
+            },
         },
 
         methods: {
             async fetch() {
-                if (!this.$route.params.category_id)
-                    this.getThemes()
-                else
-                    alert('tratata')
+                if (!this.themes)
+                    await this.getThemes()
+
+                if (!this.selectedTheme && this.$route.params.theme_name)
+                    this.selectedTheme = this.themes.find(value => value.name === this.$route.params.theme_name)
+
+                if (this.selectedTheme && !this.subthemes)
+                    await this.getSubthemes()
+
+                if (!this.selectedSubtheme && this.$route.params.subtheme_name)
+                    this.selectedSubtheme = this.subthemes.find(value => value.name === this.$route.params.subtheme_name)
+
+                if (this.selectedSubtheme && !this.difficulties)
+                    await this.getDifficulties()
+
+                if (!this.selectedDifficulty && this.$route.params.difficulty_name)
+                    this.selectedDifficulty = this.difficulties.find(value => value.name === this.$route.params.difficulty_name)
+
+                if (!this.task && this.$route.params.difficulty_name && !this.$route.query.task_id) {
+                    await this.getRandomTask()
+                    this.$router.push(`/tasks/${this.selectedTheme.name}/${this.selectedSubtheme.name}/${this.selectedDifficulty.name}/${this.task.objectId.singleValue}`)
+                }
+
+                if (!this.task && this.$route.query.task_id)
+                    await this.getCurrentTask()
             },
 
             async getThemes() {
@@ -164,8 +199,9 @@
             async getSubthemes() {
                 this.subthemesLoading = true
                 try {
-                    let res = await axios.get('/api/subthemes/${selectCat.values.name}')
-                    this.themes = res.data;
+                    console.log(this.selectedTheme)
+                    let res = await axios.get(`/api/subthemes/${this.selectedTheme.name}`)
+                    this.subthemes = res.data;
                 } catch(e) {
                     if (e.response) {
                         alert(e.response.data)
@@ -174,6 +210,47 @@
                     }
                 }
                 this.subthemesLoading = false
+            },
+
+            async getDifficulties() {
+                this.difficultiesLoading = true
+                try {
+                    let res = await axios.get(`/api/difficulties/${this.selectedSubtheme.name}`)
+                    this.difficulties = res.data;
+                } catch(e) {
+                    if (e.response) {
+                        alert(e.response.data)
+                    } else {
+                        alert(e.message)
+                    }
+                }
+                this.difficultiesLoading = false
+            },
+
+            async getRandomTask() {
+                try {
+                    let res = await axios.get(`/api/tasks/random`)
+                    this.task = res.data;
+                } catch(e) {
+                    if (e.response) {
+                        alert(e.response.data)
+                    } else {
+                        alert(e.message)
+                    }
+                }
+            },
+
+            async getCurrentTask() {
+                try {
+                    let res = await axios.get(`/api/tasks/${this.selectedSubtheme.name}/${this.selectedDifficulty.name}/${this.task.objectId.singleValue}`)
+                    this.task = res.data;
+                } catch(e) {
+                    if (e.response) {
+                        alert(e.response.data)
+                    } else {
+                        alert(e.message)
+                    }
+                }
             }
         }
     }

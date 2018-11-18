@@ -1,6 +1,5 @@
 package com.trainer
 
-import apache.cayenne.mappings.Difficulty
 import com.trainer.controllers.TaskController
 import controllers.SubthemeController
 import com.trainer.controllers.ThemeController
@@ -15,7 +14,6 @@ import io.ktor.http.content.files
 import io.ktor.http.content.static
 import io.ktor.http.content.staticRootFolder
 import io.ktor.response.respond
-import io.ktor.response.respondText
 import io.ktor.routing.get
 import io.ktor.routing.route
 import io.ktor.routing.routing
@@ -48,9 +46,14 @@ fun main(args: Array<String>) {
 
             route("api") {
                 route("tasks") {
-                    get {
+                    get("random") {
                         val task = TaskController.getRandom()
-                        call.respond(task)
+                        print(task)
+                        call.respond(task ?: "")
+                    }
+                    get("{subthemeName}/{difficultyName}/{taskId}") {
+                        val task = TaskController.get(call.parameters["subthemeName"], call.parameters["difficultyName"], call.parameters["taskId"])
+                        call.respond(task ?: "")
                     }
                 }
                 route("themes") {

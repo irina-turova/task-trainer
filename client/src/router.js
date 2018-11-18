@@ -30,7 +30,7 @@ export default new Router({
             component: () => import(/* webpackChunkName: "about" */ './views/Tasks.vue')
         },
         {
-            path: '/tasks/:category_id',
+            path: '/tasks/:theme_name',
             name: 'tasks',
             // route level code-splitting
             // this generates a separate chunk (about.[hash].js) for this route
@@ -38,7 +38,7 @@ export default new Router({
             component: () => import(/* webpackChunkName: "about" */ './views/Tasks.vue')
         },
         {
-            path: '/tasks/:category_id/:subcategory_id',
+            path: '/tasks/:theme_name/:subtheme_name',
             name: 'tasks',
             // route level code-splitting
             // this generates a separate chunk (about.[hash].js) for this route
@@ -46,7 +46,15 @@ export default new Router({
             component: () => import(/* webpackChunkName: "about" */ './views/Tasks.vue')
         },
         {
-            path: '/tasks/:category_id/:subcategory_id/:difficulty',
+            path: '/tasks/:theme_name/:subtheme_name/:difficulty_name',
+            name: 'tasks',
+            // route level code-splitting
+            // this generates a separate chunk (about.[hash].js) for this route
+            // which is lazy-loaded when the route is visited.
+            component: () => import(/* webpackChunkName: "about" */ './views/Tasks.vue')
+        },
+        {
+            path: '/tasks/:theme_name/:subtheme_name/:difficulty_name/:task_id',
             name: 'tasks',
             // route level code-splitting
             // this generates a separate chunk (about.[hash].js) for this route
