@@ -127,6 +127,9 @@ fun main(args: Array<String>) {
                     get() {
 
                     }
+                    post {
+                        // Todo: implement registration
+                    }
                 }
             }
         }
