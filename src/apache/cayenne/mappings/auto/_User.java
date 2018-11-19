@@ -28,6 +28,7 @@ public abstract class _User extends BaseDataObject {
     public static final String LOGIN_PROPERTY = "login";
     public static final String PASSWORD_PROPERTY = "password";
     public static final String RATING_PROPERTY = "rating";
+    public static final String SALT_PROPERTY = "salt";
     public static final String ROLE_PROPERTY = "role";
     public static final String SOLUTIONS_PROPERTY = "solutions";
     public static final String TASKS_PROPERTY = "tasks";
@@ -40,6 +41,7 @@ public abstract class _User extends BaseDataObject {
     public static final Property<String> LOGIN = Property.create("login", String.class);
     public static final Property<String> PASSWORD = Property.create("password", String.class);
     public static final Property<Double> RATING = Property.create("rating", Double.class);
+    public static final Property<String> SALT = Property.create("salt", String.class);
     public static final Property<Role> ROLE = Property.create("role", Role.class);
     public static final Property<List<Solution>> SOLUTIONS = Property.create("solutions", List.class);
     public static final Property<List<Task>> TASKS = Property.create("tasks", List.class);
@@ -50,6 +52,7 @@ public abstract class _User extends BaseDataObject {
     protected String login;
     protected String password;
     protected Double rating;
+    protected String salt;
 
     protected Object role;
     protected Object solutions;
@@ -115,6 +118,16 @@ public abstract class _User extends BaseDataObject {
         return this.rating;
     }
 
+    public void setSalt(String salt) {
+        beforePropertyWrite("salt", this.salt, salt);
+        this.salt = salt;
+    }
+
+    public String getSalt() {
+        beforePropertyRead("salt");
+        return this.salt;
+    }
+
     public void setRole(Role role) {
         setToOneTarget("role", role, true);
     }
@@ -168,6 +181,8 @@ public abstract class _User extends BaseDataObject {
                 return this.password;
             case "rating":
                 return this.rating;
+            case "salt":
+                return this.salt;
             case "role":
                 return this.role;
             case "solutions":
@@ -204,6 +219,9 @@ public abstract class _User extends BaseDataObject {
             case "rating":
                 this.rating = (Double)val;
                 break;
+            case "salt":
+                this.salt = (String)val;
+                break;
             case "role":
                 this.role = val;
                 break;
@@ -235,6 +253,7 @@ public abstract class _User extends BaseDataObject {
         out.writeObject(this.login);
         out.writeObject(this.password);
         out.writeObject(this.rating);
+        out.writeObject(this.salt);
         out.writeObject(this.role);
         out.writeObject(this.solutions);
         out.writeObject(this.tasks);
@@ -249,6 +268,7 @@ public abstract class _User extends BaseDataObject {
         this.login = (String)in.readObject();
         this.password = (String)in.readObject();
         this.rating = (Double)in.readObject();
+        this.salt = (String)in.readObject();
         this.role = in.readObject();
         this.solutions = in.readObject();
         this.tasks = in.readObject();

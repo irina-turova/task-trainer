@@ -59,6 +59,7 @@
 		<db-attribute name="Password" type="VARCHAR" length="100"/>
 		<db-attribute name="Rating" type="DOUBLE" length="22"/>
 		<db-attribute name="Role" type="INTEGER" length="10"/>
+		<db-attribute name="Salt" type="VARCHAR" length="200"/>
 		<db-attribute name="user_id" type="INTEGER" isPrimaryKey="true" isGenerated="true" isMandatory="true" length="10"/>
 	</db-entity>
 	<obj-entity name="Difficulty" className="apache.cayenne.mappings.Difficulty" dbEntityName="Difficulty">
@@ -98,6 +99,7 @@
 		<obj-attribute name="login" type="java.lang.String" db-attribute-path="Login"/>
 		<obj-attribute name="password" type="java.lang.String" db-attribute-path="Password"/>
 		<obj-attribute name="rating" type="java.lang.Double" db-attribute-path="Rating"/>
+		<obj-attribute name="salt" type="java.lang.String" db-attribute-path="Salt"/>
 	</obj-entity>
 	<db-relationship name="tasks" source="Difficulty" target="Task" toMany="true">
 		<db-attribute-pair source="difficulty_id" target="Difficulty"/>
