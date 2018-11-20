@@ -5,6 +5,52 @@
                 <h3 class="headline mb-0">Создание новой задачи</h3>
             </v-card-title>
 
+            <v-layout
+                    pa-3
+                    row
+                    wrap>
+                <v-flex
+                        xs4
+                        class="px-2">
+                    <v-combobox
+                            v-model="selectedTheme"
+                            :items="themes"
+                            item-text="description"
+                            item-value="name"
+                            :loading="themesLoading"
+                            label="Выберите тему"
+                            @change="getSubthemes"
+                    />
+                </v-flex>
+
+                <v-flex
+                        xs4
+                        class="px-2">
+                    <v-combobox
+                            v-if="selectedTheme"
+                            v-model="selectedSubtheme"
+                            :items="subthemes"
+                            item-text="description"
+                            item-value="name"
+                            label="Выберите подтему"
+                            @change="getDifficulties"
+                    />
+                </v-flex>
+
+                <v-flex
+                        v-if="selectedSubtheme"
+                        xs4
+                        class="px-2">
+                    <v-combobox
+                            v-model="selectedDifficulty"
+                            :items="difficulties"
+                            item-text="description"
+                            item-value="name"
+                            label="Выберите сложность"
+                    />
+                </v-flex>
+            </v-layout>
+
             <v-container>
                 <v-tabs
                         v-model="active"
@@ -97,8 +143,98 @@
 </template>
 
 <script>
+
+    import axios from 'axios'
+
     export default {
-        name: 'NewTask'
+        name: 'NewTask',
+
+        data() {
+            return {
+                selectedTheme: null,
+                selectedSubtheme: null,
+                selectedDifficulty: null,
+                themes: null,
+                subthemes: null,
+                difficulties: null,
+                task: null,
+                themesLoading: false,
+                subthemesLoading: false,
+                difficultiesLoading: false,
+                gotSolution: false,
+            }
+        },
+
+        created () {
+            this.fetch()
+        },
+
+        watch: {
+            '$route': 'fetch',
+        },
+
+        methods: {
+            async fetch() {
+                if (!this.themes)
+                    await this.getThemes()
+
+                if (this.selectedTheme && !this.subthemes)
+                    await this.getSubthemes()
+
+                if (this.selectedSubtheme && !this.difficulties)
+                    await this.getDifficulties()
+            },
+
+            async getThemes() {
+                this.themesLoading = true
+                try {
+                    let res = await axios.get('/api/themes')
+                    this.themes = res.data;
+                } catch(e) {
+                    if (e.response) {
+                        alert(e.response.data)
+                    } else {
+                        alert(e.message)
+                    }
+                }
+                this.themesLoading = false
+            },
+
+            async getSubthemes() {
+                this.subthemesLoading = true
+                try {
+                    console.log(this.selectedTheme)
+                    let res = await axios.get(`/api/subthemes/${this.selectedTheme.name}`)
+                    this.subthemes = res.data;
+                } catch(e) {
+                    if (e.response) {
+                        alert(e.response.data)
+                    } else {
+                        alert(e.message)
+                    }
+                }
+                this.subthemesLoading = false
+            },
+
+            async getDifficulties() {
+                if (!this.selectedSubtheme)
+                    return
+
+                this.difficultiesLoading = true
+                try {
+                    let res = await axios.get(`/api/difficulties/${this.selectedSubtheme.name}`)
+                    this.difficulties = res.data;
+                } catch(e) {
+                    alert('ТУТ')
+                    if (e.response) {
+                        alert(e.response.data)
+                    } else {
+                        alert(e.message)
+                    }
+                }
+                this.difficultiesLoading = false
+            }
+        }
     }
 </script>
 

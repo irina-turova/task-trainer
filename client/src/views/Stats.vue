@@ -1,11 +1,11 @@
 <template>
     <div>
         <v-layout
-                column
+                row
                 wrap>
-            <v-flex xs4 pa-2>
+            <v-flex xs6 pa-2>
                 <v-menu
-                        ref="menu"
+                        ref="menuDateStart"
                         :close-on-content-click="false"
                         v-model="menu"
                         :nudge-right="40"
@@ -19,7 +19,7 @@
                     <v-text-field
                             slot="activator"
                             v-model="date"
-                            label="Выберите временной промежуток"
+                            label="Выберите дату начала"
                             readonly
                     ></v-text-field>
                     <v-date-picker v-model="date" no-title scrollable>
@@ -30,30 +30,57 @@
                 </v-menu>
             </v-flex>
 
-            <v-flex
-                    xs4
-                    class="px-2">
-                <v-combobox
-                        v-model="selectedTheme"
-                        :items="themes"
-                        item-text="description"
-                        item-value="name"
-                        :loading="themesLoading"
-                        label="Выберите темы"
-                        multiple
-                        chips
-                />
+            <v-flex xs6 pa-2>
+                <v-menu
+                        ref="menuDateFinish"
+                        :close-on-content-click="false"
+                        v-model="menu"
+                        :nudge-right="40"
+                        :return-value.sync="date"
+                        lazy
+                        transition="scale-transition"
+                        offset-y
+                        full-width
+                        min-width="290px"
+                >
+                    <v-text-field
+                            slot="activator"
+                            v-model="date"
+                            label="Выберите дату окончания"
+                            readonly
+                    ></v-text-field>
+                    <v-date-picker v-model="date" no-title scrollable>
+                        <v-spacer></v-spacer>
+                        <v-btn flat color="primary" @click="menu = false">Cancel</v-btn>
+                        <v-btn flat color="primary" @click="$refs.menu.save(date)">OK</v-btn>
+                    </v-date-picker>
+                </v-menu>
             </v-flex>
 
-            <v-flex xs4 v-if="selectedTheme && selectedTheme.length > 0">
-                <GChart
-                    type="ColumnChart"
-                    :data="chartData"
-                    :options="chartOptions"
-                />
-            </v-flex>
 
         </v-layout>
+
+        <v-flex px-2>
+            <v-combobox
+                    v-model="selectedTheme"
+                    :items="themes"
+                    item-text="description"
+                    item-value="name"
+                    :loading="themesLoading"
+                    label="Выберите темы"
+                    multiple
+                    chips
+            />
+        </v-flex>
+
+        <v-flex v-if="selectedTheme && selectedTheme.length > 0">
+            <GChart
+                type="ColumnChart"
+                :data="chartData"
+                :options="chartOptions"
+            />
+        </v-flex>
+
         <!--<v-tabs-->
                 <!--slot="extension"-->
                 <!--v-model="model"-->
