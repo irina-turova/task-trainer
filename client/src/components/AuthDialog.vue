@@ -13,6 +13,28 @@
                 </v-card-title>
 
                 <v-container>
+                    <v-alert
+                            v-if="succeded"
+                            :value="true"
+                            color="success"
+                            icon="fas fa-check"
+                            outline
+                            class="mb-3"
+                    >
+                        Аутентификация прошла успешно
+                    </v-alert>
+
+                    <v-alert
+                            v-if="succeded === false"
+                            :value="true"
+                            color="error"
+                            icon="fas fa-exclamation-triangle"
+                            outline
+                            class="mb-3"
+                    >
+                        {{errorMessage}}
+                    </v-alert>
+
                         <v-text-field
                                 v-model="email"
                                 :rules="emailRules"
@@ -38,6 +60,7 @@
                     <v-btn
                             color="primary"
                             @click="submit"
+
                     >
                         Войти
                     </v-btn>
@@ -65,6 +88,8 @@
                 dialog: false,
 
                 valid: true,
+                succeded: null,
+                errorMessage: null,
 
                 email: '',
                 emailRules: [
@@ -75,25 +100,49 @@
                 password: '',
                 passwordRules: [
                     v => !!v || 'Обязательное поле',
-                    v => v.length >= 10 || 'Пароль должен содержать не менее 10 символов'
+                    v => v.length >= 3 || 'Пароль должен содержать не менее 10 символов'
                 ]
             }
         },
 
         methods: {
-            submit() {
+            async submit() {
                 if (this.$refs.form.validate()) {
-                    axios.post('/api/login', {
-                        email: this.email,
-                        password: this.password
-                    })
-                    this.$refs.form.reset()
-                    this.dialog = false
+
+                    const data = new FormData()
+                    data.set('user', this.email)
+                    data.set('password', this.password)
+
+                    try {
+                        let result = await axios.post('/api/login', data, {
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                            },
+                        })
+                        this.succeded = true
+                        await new Promise(r => setTimeout(r, 500));
+
+                        this.dialog = false
+                        this.$refs.form.reset()
+                        this.succeded = null
+                    } catch(e) {
+                        this.succeded = false
+                        if (e.response) {
+                            if (e.response.status === 401)
+                                this.errorMessage = "Неверный логин или пароль"
+                            else
+                                this.errorMessage = "Возникла ошибка: " + e.response.statusText
+                        } else {
+                            this.errorMessage = "Возникла ошибка, попробуйте позже"
+                        }
+                    }
+
                 }
             },
             clear() {
-                this.$refs.form.reset()
                 this.dialog = false
+                this.$refs.form.reset()
+                this.succeded = null
             }
         }
     }

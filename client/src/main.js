@@ -7,6 +7,7 @@ import ru from 'vuetify/es5/locale/ru'
 import App from './App.vue'
 import router from './router'
 import VueGoogleCharts from 'vue-google-charts'
+import '@fortawesome/fontawesome-free/css/all.css'
 
 Vue.use(Vuetify, {
     customProperties: true,

@@ -9,7 +9,6 @@ object SecurityManager {
 
         val salt = user.salt
         val hashed = DigestUtils.md5Hex(password + salt)
-        println(hashed)
 
         return hashed
     }
