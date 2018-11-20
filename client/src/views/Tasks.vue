@@ -140,15 +140,23 @@
         watch: {
             '$route': 'fetch',
             ['$route.params.theme_name'](newVal, oldVal) {
-                // this.subthemes = null
-                // this.selectedSubtheme = null
+                this.subthemes = null
+                this.selectedSubtheme = null
                 this.getSubthemes()
             },
             ['$route.params.subtheme_name'](newVal, oldVal) {
+                this.difficulties = null
+                this.selectedDifficulty = null
                 this.getDifficulties()
             },
             ['$route.params.difficulty_name'](newVal, oldVal) {
-                this.getRandomTask()
+                if (newVal)
+                    this.getRandomTask()
+                else
+                    this.task = null
+            },
+            ['$route.params.task_id'](newVal, oldVal) {
+
             },
         },
 
@@ -213,11 +221,15 @@
             },
 
             async getDifficulties() {
+                if (!this.selectedSubtheme)
+                    return
+
                 this.difficultiesLoading = true
                 try {
                     let res = await axios.get(`/api/difficulties/${this.selectedSubtheme.name}`)
                     this.difficulties = res.data;
                 } catch(e) {
+                    alert('ТУТ')
                     if (e.response) {
                         alert(e.response.data)
                     } else {
