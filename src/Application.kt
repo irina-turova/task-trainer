@@ -49,11 +49,18 @@ fun main(args: Array<String>) {
         }
 
         install(Sessions) {
-            val secretHashKey = hex("6819b57a326945c1968f45236589")
 
-            cookie<SimpleSession>("SESSION_FEATURE_SESSION") {
+            // Secret httponly session to identify user
+            cookie<LoginSession>("LOGIN_SESSION") {
                 cookie.path = "/"
+                cookie.httpOnly = true
+                val secretHashKey = hex("6819b57a326945c1968f45236589")
                 transform(SessionTransportTransformerMessageAuthentication(secretHashKey, "HmacSHA256"))
+            }
+
+            // User data to use from client
+            cookie<UserDataSession>("USER_SESSION", directorySessionStorage(File(".sessions"), cached = true)) {
+                cookie.path = "/"
             }
         }
 
@@ -74,18 +81,22 @@ fun main(args: Array<String>) {
                     post("login") {
                         val principal = call.principal<UserIdPrincipal>()
                         println(principal)
-                        call.sessions.set(SimpleSession(principal?.name ?: ""))
+                        if (principal == null)
+                            return@post
+                        call.sessions.set(LoginSession(principal.name))
+                        val user = UserController.get(principal.name.toInt())
+                        call.sessions.set(UserDataSession(user.firstName, user.lastName))
                         call.respondText("Success")
                     }
                 }
 
                 // Пример запроса, в котором проверяется сессия пользователя
                 get("hello") {
-                    val session = call.sessions.get<SimpleSession>()
+                    val session = call.sessions.get<LoginSession>()
 
-                    // В итоге в token находится строка с id пользователя или null, если куки некоррекктные
-                    println(session?.token)
-                    call.respondText(session?.token ?: "")
+                    // В итоге в id находится строка с id пользователя или null, если куки некоррекктные
+                    println(session?.id)
+                    call.respondText(session?.id ?: "")
                 }
 
                 route("tasks") {

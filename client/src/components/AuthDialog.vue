@@ -114,7 +114,7 @@
                     data.set('password', this.password)
 
                     try {
-                        let result = await axios.post('/api/login', data, {
+                        await axios.post('/api/login', data, {
                             headers: {
                                 'Content-Type': 'application/x-www-form-urlencoded',
                             },

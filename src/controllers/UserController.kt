@@ -20,4 +20,9 @@ object UserController {
             null
     }
 
+    fun get(userId: Int): User {
+        val user = Cayenne.objectForPK(OrmManager.context, User::class.java, userId)
+        return user
+    }
+
 }
