@@ -1,5 +1,6 @@
 package com.trainer
 
+import apache.cayenne.mappings.User
 import com.trainer.controllers.TaskController
 import com.trainer.controllers.ThemeController
 import com.trainer.controllers.UserController
@@ -15,6 +16,7 @@ import io.ktor.http.content.default
 import io.ktor.http.content.files
 import io.ktor.http.content.static
 import io.ktor.http.content.staticRootFolder
+import io.ktor.request.receiveText
 import io.ktor.response.respond
 import io.ktor.response.respondText
 import io.ktor.routing.get
@@ -25,6 +27,7 @@ import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import io.ktor.sessions.*
 import io.ktor.util.hex
+import org.apache.cayenne.Cayenne
 import java.io.File
 import java.text.DateFormat
 
@@ -72,23 +75,6 @@ fun main(args: Array<String>) {
 
             route("api") {
 
-                authenticate("login") {
-                    post("login") {
-                        val principal = call.principal<UserIdPrincipal>()
-                        println(principal)
-                        if (principal == null)
-                            return@post
-                        call.sessions.set(LoginSession(principal.name))
-                        val user = UserController.get(principal.name.toInt())
-                        call.respond(UserData(user.firstName, user.lastName))
-                    }
-                }
-
-                post("logout") {
-                    call.sessions.clear<LoginSession>()
-                    call.respond("")
-                }
-
                 // Пример запроса, в котором проверяется сессия пользователя
                 get("hello") {
                     val session = call.sessions.get<LoginSession>()
@@ -134,11 +120,33 @@ fun main(args: Array<String>) {
                     }
                 }
                 route("users") {
-                    get() {
 
+                    authenticate("login") {
+                        post("login") {
+                            val principal = call.principal<UserIdPrincipal>()
+                            println(principal)
+                            if (principal == null)
+                                return@post
+                            call.sessions.set(LoginSession(principal.name))
+                            val user = UserController.get(principal.name.toInt())
+                            call.respond(UserData(user.firstName, user.lastName))
+                        }
                     }
-                    post {
-                        // Todo: implement registration
+
+                    post("logout") {
+                        call.sessions.clear<LoginSession>()
+                        call.respond("")
+                    }
+
+                    post("register") {
+                        val result = UserController.store(call.receiveText())
+
+                        if (result.first.value == 200) {
+                            val user = result.second as User
+                            call.sessions.set(LoginSession(Cayenne.pkForObject(user).toString()))
+                            call.respond(result.first, UserData(user.firstName, user.lastName))
+                        } else
+                            call.respond(result.first, result.second)
                     }
                 }
             }

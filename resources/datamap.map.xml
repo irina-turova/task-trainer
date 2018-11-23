@@ -57,8 +57,8 @@
 		<db-attribute name="Login" type="VARCHAR" length="100"/>
 		<db-attribute name="MiddleName" type="VARCHAR" length="100"/>
 		<db-attribute name="Password" type="VARCHAR" length="100"/>
-		<db-attribute name="Rating" type="DOUBLE" length="22"/>
-		<db-attribute name="Role" type="INTEGER" length="10"/>
+		<db-attribute name="Rating" type="DOUBLE" isMandatory="true" length="22"/>
+		<db-attribute name="Role" type="INTEGER" isMandatory="true" length="10"/>
 		<db-attribute name="Salt" type="VARCHAR" length="200"/>
 		<db-attribute name="user_id" type="INTEGER" isPrimaryKey="true" isGenerated="true" isMandatory="true" length="10"/>
 	</db-entity>

@@ -5,7 +5,7 @@ import org.apache.cayenne.configuration.server.ServerRuntime
 
 object OrmManager {
 
-    val context: ObjectContext?
+    val context: ObjectContext
 
     init {
         val cayenneRuntime = ServerRuntime.builder()
