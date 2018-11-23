@@ -129,7 +129,7 @@ fun main(args: Array<String>) {
                                 return@post
                             call.sessions.set(LoginSession(principal.name))
                             val user = UserController.get(principal.name.toInt())
-                            call.respond(UserData(user.firstName, user.lastName, user.role.name))
+                            call.respond(UserData(user.firstName, user.lastName, user.login, user.role.name))
                         }
                     }
 
@@ -144,7 +144,7 @@ fun main(args: Array<String>) {
                         if (result.first.value == 200) {
                             val user = result.second as User
                             call.sessions.set(LoginSession(Cayenne.pkForObject(user).toString()))
-                            call.respond(result.first, UserData(user.firstName, user.lastName, user.role.name))
+                            call.respond(result.first, UserData(user.firstName, user.lastName, user.login, user.role.name))
                         } else
                             call.respond(result.first, result.second)
                     }

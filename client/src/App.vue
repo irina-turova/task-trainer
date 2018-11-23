@@ -9,6 +9,7 @@
             <v-toolbar-items class="px-5">
 
                 <v-btn
+                        v-if="user"
                         flat
                         @click="$router.push('/tasks')">Задачи
                 </v-btn>
@@ -34,10 +35,11 @@
             <registration-dialog v-if="!user"></registration-dialog>
 
             <v-btn v-if="user" flat>
-                <v-icon left
+                <!--<v-icon left
                         color="secondary"
-                >far fa-user</v-icon>
-                {{ userName }}
+                >far fa-user</v-icon>-->
+                <v-avatar size="35"><img :src="gravatarLink"></v-avatar>
+                &nbsp;&nbsp;{{ userName }}
             </v-btn>
 
             <v-btn  v-if="user"
@@ -75,6 +77,7 @@
     import AuthDialog from "./components/AuthDialog";
     import RegistrationDialog from "./components/RegistrationDialog";
     import axios from 'axios'
+    import md5 from 'md5'
 
     export default {
         name: 'app',
@@ -90,6 +93,10 @@
 
             userName() {
                 return this.user.firstName + ' ' + this.user.secondName
+            },
+
+            gravatarLink() {
+                return `https://www.gravatar.com/avatar/${md5(this.user.email)}?d=identicon`
             }
         },
 

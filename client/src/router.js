@@ -22,44 +22,17 @@ export default new Router({
             component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
         },
         {
-            path: '/tasks',
+            path: '/tasks/:theme_name?/:subtheme_name?/:difficulty_name?/:task_id?',
             name: 'tasks',
             // route level code-splitting
             // this generates a separate chunk (about.[hash].js) for this route
             // which is lazy-loaded when the route is visited.
-            component: () => import(/* webpackChunkName: "about" */ './views/Tasks.vue')
-        },
-        {
-            path: '/tasks/:theme_name',
-            name: 'tasks',
-            // route level code-splitting
-            // this generates a separate chunk (about.[hash].js) for this route
-            // which is lazy-loaded when the route is visited.
-            component: () => import(/* webpackChunkName: "about" */ './views/Tasks.vue')
-        },
-        {
-            path: '/tasks/:theme_name/:subtheme_name',
-            name: 'tasks',
-            // route level code-splitting
-            // this generates a separate chunk (about.[hash].js) for this route
-            // which is lazy-loaded when the route is visited.
-            component: () => import(/* webpackChunkName: "about" */ './views/Tasks.vue')
-        },
-        {
-            path: '/tasks/:theme_name/:subtheme_name/:difficulty_name',
-            name: 'tasks',
-            // route level code-splitting
-            // this generates a separate chunk (about.[hash].js) for this route
-            // which is lazy-loaded when the route is visited.
-            component: () => import(/* webpackChunkName: "about" */ './views/Tasks.vue')
-        },
-        {
-            path: '/tasks/:theme_name/:subtheme_name/:difficulty_name/:task_id',
-            name: 'tasks',
-            // route level code-splitting
-            // this generates a separate chunk (about.[hash].js) for this route
-            // which is lazy-loaded when the route is visited.
-            component: () => import(/* webpackChunkName: "about" */ './views/Tasks.vue')
+            component: () => import(/* webpackChunkName: "about" */ './views/Tasks.vue'),
+            beforeEnter (to, from, next) {
+                if (localStorage.getItem("user"))
+                    next()
+                else next(false)
+            }
         },
         {
             path: '/stats',
@@ -67,7 +40,12 @@ export default new Router({
             // route level code-splitting
             // this generates a separate chunk (about.[hash].js) for this route
             // which is lazy-loaded when the route is visited.
-            component: () => import(/* webpackChunkName: "about" */ './views/Stats.vue')
+            component: () => import(/* webpackChunkName: "about" */ './views/Stats.vue'),
+            beforeEnter (to, from, next) {
+                if (localStorage.getItem("user"))
+                    next()
+                else next(false)
+            }
         },
         {
             path: '/newtask',
@@ -75,7 +53,13 @@ export default new Router({
             // route level code-splitting
             // this generates a separate chunk (about.[hash].js) for this route
             // which is lazy-loaded when the route is visited.
-            component: () => import(/* webpackChunkName: "about" */ './views/NewTask.vue')
+            component: () => import(/* webpackChunkName: "about" */ './views/NewTask.vue'),
+            beforeEnter (to, from, next) {
+                if (localStorage.getItem("user") && JSON.parse(localStorage.getItem("user")).role !== "student")
+                    next()
+                else next(false)
+            }
+
         }
     ]
 })
