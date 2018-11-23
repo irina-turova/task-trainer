@@ -57,11 +57,6 @@ fun main(args: Array<String>) {
                 val secretHashKey = hex("6819b57a326945c1968f45236589")
                 transform(SessionTransportTransformerMessageAuthentication(secretHashKey, "HmacSHA256"))
             }
-
-            // User data to use from client
-            cookie<UserDataSession>("USER_SESSION", directorySessionStorage(File(".sessions"), cached = true)) {
-                cookie.path = "/"
-            }
         }
 
         routing {
@@ -85,9 +80,13 @@ fun main(args: Array<String>) {
                             return@post
                         call.sessions.set(LoginSession(principal.name))
                         val user = UserController.get(principal.name.toInt())
-                        call.sessions.set(UserDataSession(user.firstName, user.lastName))
-                        call.respondText("Success")
+                        call.respond(UserData(user.firstName, user.lastName))
                     }
+                }
+
+                post("logout") {
+                    call.sessions.clear<LoginSession>()
+                    call.respond("")
                 }
 
                 // Пример запроса, в котором проверяется сессия пользователя

@@ -24,5 +24,12 @@ Vue.config.productionTip = false;
 
 new Vue({
     router,
+
+    data() {
+        return {
+            user: JSON.parse(localStorage.getItem("user"))
+        }
+    },
+
     render: h => h(App)
 }).$mount('#app');

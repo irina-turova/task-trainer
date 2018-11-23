@@ -2,4 +2,4 @@ package com.trainer
 
 data class LoginSession(val id: String)
 
-data class UserDataSession(val userFirstName: String, val userSecondName: String)
+data class UserData(val firstName: String, val secondName: String)

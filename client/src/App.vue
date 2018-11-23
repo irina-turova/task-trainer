@@ -27,9 +27,20 @@
 
             <v-spacer/>
 
-            <auth-dialog></auth-dialog>
+            <auth-dialog v-if="!user"></auth-dialog>
 
-            <registration-dialog></registration-dialog>
+            <registration-dialog v-if="!user"></registration-dialog>
+
+            <v-btn v-if="user" flat>
+                <v-icon left
+                        color="secondary"
+                >far fa-user</v-icon>
+                {{ userName }}
+            </v-btn>
+
+            <v-btn  v-if="user"
+                    @click="logout()"
+            >Выйти</v-btn>
 
         </v-toolbar>
 
@@ -61,11 +72,31 @@
 <script>
     import AuthDialog from "./components/AuthDialog";
     import RegistrationDialog from "./components/RegistrationDialog";
+    import axios from 'axios'
+
     export default {
         name: 'app',
         components: {RegistrationDialog, AuthDialog},
         data() {
             return {}
+        },
+
+        computed: {
+            user() {
+                return this.$root.user
+            },
+
+            userName() {
+                return this.user.firstName + ' ' + this.user.secondName
+            }
+        },
+
+        methods: {
+            logout() {
+                this.$root.user = undefined
+                localStorage.removeItem("user")
+                axios.post("/api/logout")
+            }
         }
         
     }

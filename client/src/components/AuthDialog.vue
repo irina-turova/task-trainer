@@ -100,7 +100,7 @@
                 password: '',
                 passwordRules: [
                     v => !!v || 'Обязательное поле',
-                    v => v.length >= 3 || 'Пароль должен содержать не менее 10 символов'
+                    v => v.length >= 10 || 'Пароль должен содержать не менее 10 символов'
                 ]
             }
         },
@@ -114,13 +114,16 @@
                     data.set('password', this.password)
 
                     try {
-                        await axios.post('/api/login', data, {
+                        let response = await axios.post('/api/login', data, {
                             headers: {
                                 'Content-Type': 'application/x-www-form-urlencoded',
                             },
                         })
                         this.succeded = true
                         await new Promise(r => setTimeout(r, 500));
+
+                        localStorage.setItem("user", JSON.stringify(response.data))
+                        this.$root.user = response.data
 
                         this.dialog = false
                         this.$refs.form.reset()
