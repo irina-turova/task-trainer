@@ -14,11 +14,13 @@
                 </v-btn>
 
                 <v-btn
+                        v-if="user"
                         flat
                         @click="$router.push('/stats')">Статистика
                 </v-btn>
 
                 <v-btn
+                        v-if="user && user.role !== 'student'"
                         flat
                         @click="$router.push('/newtask')">Создание задачи
                 </v-btn>
