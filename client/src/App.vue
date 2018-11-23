@@ -95,7 +95,7 @@
             logout() {
                 this.$root.user = undefined
                 localStorage.removeItem("user")
-                axios.post("/api/logout")
+                axios.post("/api/users/logout")
             }
         }
         
