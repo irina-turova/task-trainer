@@ -51,9 +51,20 @@
                 </v-flex>
             </v-layout>
 
+
             <v-container>
+                <v-alert
+                        value="true"
+                        color="info"
+                        icon="fas fa-superscript"
+                        outline
+                >
+
+                        Текст задачи может содержать LaTeX-разметку. С примером использования LaTeX можно ознакомиться по
+                        <a href="https://latex.js.org/playground.html">ссылке</a>
+
+                </v-alert>
                 <v-tabs
-                        v-model="active"
                 >
                     <v-tab>
                         Редактирование
@@ -62,6 +73,7 @@
                         <v-card flat>
                             <v-card-title>
                                 <v-text-field
+                                        v-model="taskTitle"
                                         placeholder="Найти сумму двух чисел"
                                         label="Название задачи"
                                 >
@@ -69,17 +81,20 @@
                             </v-card-title>
                             <v-card-text>
                                 <v-textarea
+                                        v-model="taskText"
                                         placeholder="Дано два числа: a и b. Нужно найти их сумму"
                                         label="Текст задачи"
                                 >
                                 </v-textarea>
-                                <v-btn>Загрузить картинку к решению</v-btn>
+                                <v-btn>Загрузить картинку к задаче</v-btn>
                                 <v-text-field
+                                        v-model="taskSolution"
                                         placeholder="1.2"
                                         label="Ответ на задачу"
                                 >
                                 </v-text-field>
                                 <v-textarea
+                                        v-model="taskExplanation"
                                         placeholder="Нужно взять два числа и сложить их столбиком"
                                         label="Решение задачи"
                                 >
@@ -95,33 +110,26 @@
                     <v-tab-item>
                         <v-card>
                             <v-card-title primary-title>
-                                <h3 class="headline mb-0">Нахождение гипотенузы треугольника</h3>
+                                <h3 class="headline mb-0">{{taskTitle}}</h3>
                             </v-card-title>
 
+                            <img src="http://docs.likenul.com/pars_docs/refs/19/18704/18704_html_538f9f8f.png"
+                                 style="float:right; max-width:300px; max-height:300px"
+                            >
                             <v-card-text>
-                                <img src="http://docs.likenul.com/pars_docs/refs/19/18704/18704_html_538f9f8f.png"
-                                     style="float:right; max-width:300px; max-height:300px"
-                                >
 
-                                <p style="text-align: justify">
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab commodi ex natus quos ratione suscipit. Consequuntur facere labore magnam officia! Aliquid ea eligendi enim et eveniet fugiat qui vero, voluptas? Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab commodi ex natus quos ratione suscipit. Consequuntur facere labore magnam officia! Aliquid ea eligendi enim et eveniet fugiat qui vero, voluptas? Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab commodi ex natus quos ratione suscipit. Consequuntur facere labore magnam officia! Aliquid ea eligendi enim et eveniet fugiat qui vero, voluptas?Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab commodi ex natus quos ratione suscipit. Consequuntur facere labore magnam officia! Aliquid ea eligendi enim et eveniet fugiat qui vero, voluptas? Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab commodi ex natus quos ratione suscipit. Consequuntur facere labore magnam officia! Aliquid ea eligendi enim et eveniet fugiat qui vero, voluptas? Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab commodi ex natus quos ratione suscipit. Consequuntur facere labore magnam officia! Aliquid ea eligendi enim et eveniet fugiat qui vero, voluptas?
-                                </p>
+                                <v-container v-html="renderedTaskText">                               >
+                                </v-container>
 
                                 <div style="clear:both;"></div>
 
-
-                                <v-text-field
-                                        placeholder="1.2"
-                                        label="Ответ на задачу"
-                                >
-                                </v-text-field>
                             </v-card-text>
 
                         </v-card>
 
                         <v-card>
                             <v-card-title><h3>Решение задачи:</h3></v-card-title>
-                            <v-card-text>
+                            <v-card-text v-html="renderedTaskExplanation">
                                 <p>
                                     Квадрат гипотенузы равен сумме квадратов катетов!
                                 </p>
@@ -145,6 +153,7 @@
 <script>
 
     import axios from 'axios'
+    import { parse, HtmlGenerator } from 'latex.js'
 
     export default {
         name: 'NewTask',
@@ -157,14 +166,37 @@
                 themes: null,
                 subthemes: null,
                 difficulties: null,
-                task: null,
                 themesLoading: false,
                 subthemesLoading: false,
                 difficultiesLoading: false,
-                gotSolution: false,
+
+                taskTitle: '',
+                taskText: '',
+                taskSolution: null,
+                taskExplanation: '',
             }
         },
 
+        computed: {
+            renderedTaskText() {
+                let generator = new HtmlGenerator({ hyphenate: false })
+
+                let doc = parse(this.taskText, { generator: generator }).htmlDocument()
+
+                let result = doc.body.childNodes[0]
+                console.log(result.innerHTML)
+                return result.innerHTML
+            },
+            renderedTaskExplanation() {
+                let generator = new HtmlGenerator({ hyphenate: false })
+
+                let doc = parse(this.taskExplanation, { generator: generator }).htmlDocument()
+
+                let result = doc.body.childNodes[0]
+                console.log(result.innerHTML)
+                return result.innerHTML
+            },
+        },
         created () {
             this.fetch()
         },
