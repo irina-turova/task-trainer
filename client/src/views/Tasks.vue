@@ -62,9 +62,8 @@
                         >
 
 
-                        <p style="text-align: justify">
-                            {{task.text}}
-                        </p>
+                        <v-container v-html="renderedTaskText">                               >
+                        </v-container>
 
                         <div style="clear:both;"></div>
 
@@ -93,10 +92,7 @@
                 </v-card>
 
                 <v-card v-if="gotSolution">
-                    <v-card-text>
-                        <p>
-                            Квадрат гипотенузы равен сумме квадратов катетов!
-                        </p>
+                    <v-card-text v-html="renderedTaskExplanation">
                     </v-card-text>
                     <v-card-actions>
                         <v-btn
@@ -113,6 +109,7 @@
 
 <script>
     import axios from 'axios'
+    import { parse, HtmlGenerator } from 'latex.js'
 
     export default {
         name: 'Tasks',
@@ -158,6 +155,27 @@
             ['$route.params.task_id'](newVal, oldVal) {
 
             },
+        },
+
+        computed : {
+            renderedTaskText() {
+                let generator = new HtmlGenerator({ hyphenate: false })
+
+                let doc = parse(this.task.text, { generator: generator }).htmlDocument()
+
+                let result = doc.body.childNodes[0]
+                console.log(result.innerHTML)
+                return result.innerHTML
+            },
+            renderedTaskExplanation() {
+                let generator = new HtmlGenerator({ hyphenate: false })
+
+                let doc = parse(this.task.explanation, { generator: generator }).htmlDocument()
+
+                let result = doc.body.childNodes[0]
+                console.log(result.innerHTML)
+                return result.innerHTML
+            }
         },
 
         methods: {
@@ -243,6 +261,7 @@
                 try {
                     let res = await axios.get(`/api/tasks/random`)
                     this.task = res.data;
+                    console.log(this.task)
                 } catch(e) {
                     if (e.response) {
                         alert(e.response.data)
