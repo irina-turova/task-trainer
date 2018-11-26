@@ -35,7 +35,7 @@ object UserController {
             user.initWithJson(json)
 
             val emailUnique = ObjectSelect.query(User::class.java).where(User.LOGIN.eq(user.login))
-                .selectFirst(OrmManager.context) != null
+                .selectFirst(OrmManager.context) == null
             if (emailUnique) {
                 OrmManager.context.commitChanges()
                 Pair(HttpStatusCode(200, ""), user)
