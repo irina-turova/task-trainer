@@ -8,6 +8,7 @@ import App from './App.vue'
 import router from './router'
 import VueGoogleCharts from 'vue-google-charts'
 import '@fortawesome/fontawesome-free/css/all.css'
+import VueNativeSock from 'vue-native-websocket'
 
 Vue.use(Vuetify, {
     customProperties: true,
@@ -19,6 +20,12 @@ Vue.use(Vuetify, {
 });
 
 Vue.use(VueGoogleCharts)
+
+Vue.use(VueNativeSock, 'ws://192.168.1.2:8075/api/chat', {
+    reconnection: true, // (Boolean) whether to reconnect automatically (false)
+    reconnectionAttempts: 5, // (Number) number of reconnection attempts before giving up (Infinity),
+    reconnectionDelay: 3000, // (Number) how long to initially wait before attempting a new (1000)
+})
 
 Vue.config.productionTip = false;
 
