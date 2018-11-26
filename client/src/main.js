@@ -22,7 +22,7 @@ Vue.use(Vuetify, {
 Vue.use(VueGoogleCharts)
 
 Vue.use(VueNativeSock, 'ws://192.168.1.2:8075/api/chat', {
-    reconnection: true, // (Boolean) whether to reconnect automatically (false)
+    // reconnection: true, // (Boolean) whether to reconnect automatically (false)
     reconnectionAttempts: 5, // (Number) number of reconnection attempts before giving up (Infinity),
     reconnectionDelay: 3000, // (Number) how long to initially wait before attempting a new (1000)
 })

@@ -1,15 +1,16 @@
-package com.trainer
+package com.trainer.routers
 
-import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.trainer.LoginSession
+import com.trainer.UserData
 import com.trainer.controllers.UserController
 import io.ktor.application.install
 import io.ktor.http.cio.websocket.DefaultWebSocketSession
 import io.ktor.http.cio.websocket.Frame
 import io.ktor.http.cio.websocket.readText
-import io.ktor.locations.*
 import io.ktor.routing.Route
 import io.ktor.routing.application
+import io.ktor.routing.route
 import io.ktor.sessions.get
 import io.ktor.sessions.sessions
 import io.ktor.websocket.webSocket
@@ -26,7 +27,7 @@ fun Route.chat() {
         masking = false
     }
 
-    location<Chat> {
+    route("chat") {
         val clients = Collections.synchronizedSet(LinkedHashSet<ChatClient>())
 
         webSocket("") {
