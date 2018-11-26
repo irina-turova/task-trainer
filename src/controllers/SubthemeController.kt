@@ -3,6 +3,9 @@ package controllers
 import apache.cayenne.mappings.Subtheme
 import apache.cayenne.mappings.Theme
 import com.trainer.OrmManager
+import com.trainer.utils.initWithJson
+import io.ktor.http.HttpStatusCode
+import org.apache.cayenne.CayenneRuntimeException
 import org.apache.cayenne.query.ObjectSelect
 
 object SubthemeController {
@@ -11,4 +14,29 @@ object SubthemeController {
         return subthemes
     }
 
+    fun store(json: String): Pair<HttpStatusCode, Any>  {
+        return try {
+            val subtheme = OrmManager.context.newObject(Subtheme::class.java)
+            subtheme.initWithJson(json)
+
+            val nameUnique = ObjectSelect.query(Subtheme::class.java).where(Subtheme.NAME.eq(subtheme.name))
+                .selectFirst(OrmManager.context) == null
+            val descriptionUnique = ObjectSelect.query(Subtheme::class.java).where(Subtheme.DESCRIPTION.eq(subtheme.description))
+                .selectFirst(OrmManager.context) == null
+
+            if (!descriptionUnique)
+                Pair(HttpStatusCode(422, ""), "Подтема с таким названием уже существует")
+            else if (!nameUnique)
+                Pair(HttpStatusCode(422, ""), "Подтема с таким служебным названием уже существует")
+            else {
+                OrmManager.context.commitChanges()
+                Pair(HttpStatusCode(200, ""), subtheme)
+            }
+
+        } catch (e: CayenneRuntimeException) {
+            Pair(HttpStatusCode(422, ""), "Полученные данные невалидны")
+        } catch (e: Exception) {
+            Pair(HttpStatusCode(500, ""), "Произошла ошибка во время добавления. Попробуйте позже")
+        }
+    }
 }

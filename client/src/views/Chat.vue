@@ -34,28 +34,27 @@
 </template>
 
 <script>
-    export default {
-        name: "Chat",
+export default {
+    name: 'Chat',
 
-        data() {
-            return {
-                messages: [],
-                message: ''
-            }
-        },
+    data () {
+        return {
+            messages: [],
+            message: ''
+        }
+    },
 
-        created() {
-            this.$options.sockets.onmessage = (data) => this.messages.push(JSON.parse(data.data))
-        },
+    created () {
+        this.$options.sockets.onmessage = (data) => this.messages.push(JSON.parse(data.data))
+    },
 
-        methods: {
-            sendMessage() {
-                if (this.message.trim().length > 0)
-                    this.$socket.send(this.message)
-                this.message = ''
-            }
+    methods: {
+        sendMessage () {
+            if (this.message.trim().length > 0) { this.$socket.send(this.message) }
+            this.message = ''
         }
     }
+}
 </script>
 
 <style scoped>

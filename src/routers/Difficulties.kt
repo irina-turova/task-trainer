@@ -15,5 +15,10 @@ fun Route.difficulties() {
             val difficulties = DifficultyController.get(subtheme)
             call.respond(difficulties)
         }
+
+        get {
+            val difficulties = DifficultyController.get()
+            call.respond(difficulties)
+        }
     }
 }
