@@ -29,6 +29,7 @@ fun main(args: Array<String>) {
             gson {
                 setDateFormat(DateFormat.LONG)
                 setPrettyPrinting()
+                disableInnerClassSerialization()
             }
         }
 

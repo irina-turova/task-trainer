@@ -12,4 +12,9 @@ object DifficultyController {
         return difficulties
     }
 
+    fun get(): List<Difficulty> {
+        val difficulties = ObjectSelect.query(Difficulty::class.java).select(OrmManager.context)
+        return difficulties
+    }
+
 }

@@ -4,7 +4,6 @@
             width="500">
         <v-btn slot="activator">Войти</v-btn>
 
-
         <v-form ref="form" v-model="valid">
             <v-card>
                 <v-card-title
@@ -78,77 +77,72 @@
 </template>
 
 <script>
-    import axios from 'axios'
+import axios from 'axios'
 
-    export default {
-        name: "AuthDialog",
+export default {
+    name: 'AuthDialog',
 
-        data() {
-            return {
-                dialog: false,
+    data () {
+        return {
+            dialog: false,
 
-                valid: true,
-                succeded: null,
-                errorMessage: null,
+            valid: true,
+            succeded: null,
+            errorMessage: null,
 
-                email: '',
-                emailRules: [
-                    v => !!v || 'Обязательное поле',
-                    v => /.+@.+/.test(v) || 'E-mail должен быть корректным'
-                ],
+            email: '',
+            emailRules: [
+                v => !!v || 'Обязательное поле',
+                v => /.+@.+/.test(v) || 'E-mail должен быть корректным'
+            ],
 
-                password: '',
-                passwordRules: [
-                    v => !!v || 'Обязательное поле',
-                    v => v.length >= 10 || 'Пароль должен содержать не менее 10 символов'
-                ]
+            password: '',
+            passwordRules: [
+                v => !!v || 'Обязательное поле',
+                v => v.length >= 10 || 'Пароль должен содержать не менее 10 символов'
+            ]
+        }
+    },
+
+    methods: {
+        async submit () {
+            if (this.$refs.form.validate()) {
+                const data = new FormData()
+                data.set('user', this.email)
+                data.set('password', this.password)
+
+                try {
+                    let response = await axios.post('/api/users/login', data, {
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        }
+                    })
+                    this.succeded = true
+                    await new Promise(resolve => setTimeout(resolve, 500))
+
+                    localStorage.setItem('user', JSON.stringify(response.data))
+                    this.$root.user = response.data
+
+                    this.dialog = false
+                    this.$refs.form.reset()
+                    this.succeded = null
+                } catch (e) {
+                    this.succeded = false
+                    if (e.response) {
+                        if (e.response.status === 401) { this.errorMessage = 'Неверный логин или пароль' } else { this.errorMessage = 'Возникла ошибка: ' + e.response.statusText }
+                    } else {
+                        this.errorMessage = 'Возникла ошибка, попробуйте позже'
+                    }
+                }
             }
         },
-
-        methods: {
-            async submit() {
-                if (this.$refs.form.validate()) {
-
-                    const data = new FormData()
-                    data.set('user', this.email)
-                    data.set('password', this.password)
-
-                    try {
-                        let response = await axios.post('/api/users/login', data, {
-                            headers: {
-                                'Content-Type': 'application/x-www-form-urlencoded',
-                            },
-                        })
-                        this.succeded = true
-                        await new Promise(r => setTimeout(r, 500));
-
-                        localStorage.setItem("user", JSON.stringify(response.data))
-                        this.$root.user = response.data
-
-                        this.dialog = false
-                        this.$refs.form.reset()
-                        this.succeded = null
-                    } catch(e) {
-                        this.succeded = false
-                        if (e.response) {
-                            if (e.response.status === 401)
-                                this.errorMessage = "Неверный логин или пароль"
-                            else
-                                this.errorMessage = "Возникла ошибка: " + e.response.statusText
-                        } else {
-                            this.errorMessage = "Возникла ошибка, попробуйте позже"
-                        }
-                    }
-
-                }
-            },
-            clear() {
-                this.dialog = false
-                this.$refs.form.reset()
-                this.succeded = null
-            }
+        clear () {
+            this.dialog = false
+            this.$refs.form.reset()
+            this.succeded = null
         }
     }
+}
 </script>
 
 <style scoped>
