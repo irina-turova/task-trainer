@@ -89,7 +89,9 @@
                                         placeholder="Нужно взять два числа и сложить их столбиком"
                                         label="Решение задачи">
                                 </v-textarea>
-                                <v-btn>Загрузить картинку к решению</v-btn>
+                                <!--<v-btn>Загрузить картинку к решению</v-btn>-->
+
+                                <input ref="solutionFileInput" type="file" name="solutionImage" @change="uploadSolutionImage"/>
                             </v-card-text>
                         </v-card>
                     </v-tab-item>
@@ -101,8 +103,7 @@
                                 <h3 class="headline mb-0">{{taskTitle}}</h3>
                             </v-card-title>
 
-                            <!--style="float:right; max-width:300px; max-height:300px"-->
-                            <v-img :src="taskImage"
+                            <v-img :src="taskImage" style="display:block; margin: 0 auto; max-width:300px; max-height:300px"
                                    ></v-img>
                             <v-card-text>
                                 <v-container v-html="renderedTaskText"></v-container>
@@ -112,6 +113,8 @@
 
                         <v-card>
                             <v-card-title><h3>Решение задачи:</h3></v-card-title>
+                            <v-img :src="solutionImage" style="display:block; margin: 0 auto; max-width:300px; max-height:300px"
+                            ></v-img>
                             <v-card-text v-html="renderedTaskExplanation">
                                 <p>Квадрат гипотенузы равен сумме квадратов катетов!</p>
                             </v-card-text>
@@ -151,7 +154,8 @@ export default {
 
             taskTitle: '',
             taskText: '',
-            taskImage: 'http://docs.likenul.com/pars_docs/refs/19/18704/18704_html_538f9f8f.png',
+            taskImage: '',
+            solutionImage: '',
             taskSolution: null,
             taskExplanation: '',
 
@@ -299,8 +303,16 @@ export default {
 
         async uploadTaskImage() {
             let response = await this.uploadImage(this.$refs.taskFileInput)
-            this.taskImage = response.data.name
-            console.log(this.taskImage)
+            console.log(response)
+            if (response.status === 200)
+                this.taskImage = "userdata/" + response.data.name
+        },
+
+        async uploadSolutionImage() {
+            let response = await this.uploadImage(this.$refs.solutionFileInput)
+            console.log(response)
+            if (response.status === 200)
+                this.solutionImage = "userdata/" + response.data.name
         },
 
         async createTask() {
