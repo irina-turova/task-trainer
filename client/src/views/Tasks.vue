@@ -114,6 +114,7 @@
                                 v-if="actualAnswerSent || gotSolution"
                                 color="orange"
                                 flat
+                                @click="getNextTask"
                         >Следующая задача</v-btn>
                     </v-card-actions>
                 </v-card>
@@ -172,7 +173,9 @@
                     this.task = null
             },
             ['$route.params.task_id'](newVal, oldVal) {
-
+                this.gotSolution = false
+                this.actualAnswer = null
+                this.actualAnswerSent = false
             },
         },
 
@@ -301,6 +304,11 @@
                         alert(e.message)
                     }
                 }
+            },
+
+            async getNextTask() {
+                await this.getRandomTask()
+                this.$router.push(`/tasks/${this.selectedTheme.name}/${this.selectedSubtheme.name}/${this.selectedDifficulty.name}/${this.task.objectId.singleValue}`)
             },
 
             async sendSolution() {

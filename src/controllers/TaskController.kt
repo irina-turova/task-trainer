@@ -23,12 +23,13 @@ object TaskController {
     }
 
     fun check(taskId: Int, userId: Int, actualAnswer: String): Boolean {
-        val solution = OrmManager.context.newObject(Solution::class.java)
+        val ctx = OrmManager.runtime.newContext()
+        val solution = ctx.newObject(Solution::class.java)
         solution.actualAnswer = actualAnswer
-        solution.task = Cayenne.objectForPK(OrmManager.context, Task::class.java, taskId)
+        solution.task = Cayenne.objectForPK(ctx, Task::class.java, taskId)
         solution.solutionDateTime = LocalDateTime.now()
-        solution.user1 = Cayenne.objectForPK(OrmManager.context, User::class.java, userId)
-        OrmManager.context.commitChanges()
+        solution.user1 = Cayenne.objectForPK(ctx, User::class.java, userId)
+        ctx.commitChanges()
         return solution.task.rightAnswer == solution.actualAnswer
     }
 
