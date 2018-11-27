@@ -16,20 +16,21 @@ object SubthemeController {
 
     fun store(json: String): Pair<HttpStatusCode, Any>  {
         return try {
-            val subtheme = OrmManager.context.newObject(Subtheme::class.java)
+            val ctx = OrmManager.runtime.newContext()
+            val subtheme = ctx.newObject(Subtheme::class.java)
             subtheme.initWithJson(json)
 
             val nameUnique = ObjectSelect.query(Subtheme::class.java).where(Subtheme.NAME.eq(subtheme.name))
-                .selectFirst(OrmManager.context) == null
+                .selectFirst(ctx) == null
             val descriptionUnique = ObjectSelect.query(Subtheme::class.java).where(Subtheme.DESCRIPTION.eq(subtheme.description))
-                .selectFirst(OrmManager.context) == null
+                .selectFirst(ctx) == null
 
             if (!descriptionUnique)
                 Pair(HttpStatusCode(422, ""), "Подтема с таким названием уже существует")
             else if (!nameUnique)
                 Pair(HttpStatusCode(422, ""), "Подтема с таким служебным названием уже существует")
             else {
-                OrmManager.context.commitChanges()
+                ctx.commitChanges()
                 Pair(HttpStatusCode(200, ""), subtheme)
             }
 

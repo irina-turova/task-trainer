@@ -34,13 +34,14 @@ object TaskController {
 
     fun store(json: String, userId: Int): Pair<HttpStatusCode, Any>  {
         return try {
-            val task = OrmManager.context.newObject(Task::class.java)
+            val ctx = OrmManager.runtime.newContext()
+            val task = ctx.newObject(Task::class.java)
             task.initWithJson(json)
 
             val user = UserController.get(userId)
             user.addToTasks(task)
 
-            OrmManager.context.commitChanges()
+            ctx.commitChanges()
             Pair(HttpStatusCode(200, ""), task)
 
 

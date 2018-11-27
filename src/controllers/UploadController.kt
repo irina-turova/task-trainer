@@ -13,10 +13,11 @@ object UploadController {
 
     fun store(fileName: String): Pair<HttpStatusCode, ImageData?> {
         return try {
-            val image = OrmManager.context.newObject(Image::class.java)
+            val ctx = OrmManager.runtime.newContext()
+            val image = ctx.newObject(Image::class.java)
             image.name = fileName
             image.description = "default"
-            OrmManager.context.commitChanges()
+            ctx.commitChanges()
             Pair(HttpStatusCode(200, ""), ImageData(Cayenne.intPKForObject(image), fileName))
         } catch (e: Exception) {
             Pair(HttpStatusCode(500, ""), null)

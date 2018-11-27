@@ -6,13 +6,14 @@ import org.apache.cayenne.configuration.server.ServerRuntime
 object OrmManager {
 
     val context: ObjectContext
+    val runtime: ServerRuntime
 
     init {
-        val cayenneRuntime = ServerRuntime.builder()
+        runtime = ServerRuntime.builder()
             .addConfig("cayenne-project.xml")
             .build()
 
-        context = cayenneRuntime.newContext()
+        context = runtime.newContext()
     }
 
 }
