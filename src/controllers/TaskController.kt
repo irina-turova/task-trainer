@@ -11,9 +11,14 @@ import java.time.LocalDateTime
 
 object TaskController {
 
-    fun getRandom(): Task? {
+    fun getRandom(userId: Int, subthemeName: String?, difficultyName: String?): Task? {
+        val user = UserController.get(userId)
+        val userTasksId = user.solutions.map { Cayenne.intPKForObject(it.task) }
+
         val tasks = ObjectSelect.query(Task::class.java).select(OrmManager.context)
-        val task = if (tasks.isNotEmpty()) tasks.random() else null
+        val filtered = tasks.filter { Cayenne.pkForObject(it) !in userTasksId &&
+                it.subtheme1.name == subthemeName && it.difficulty.name == difficultyName }
+        val task = if (filtered.isNotEmpty()) filtered.random() else null
         return task
     }
 

@@ -74,11 +74,11 @@
                                 v-model="actualAnswer"
                                 >
                         </v-text-field>
-                        <v-card
+                        <v-card color="success" class="white--text"
                             v-if="isRightAnswer && actualAnswerSent">
                             <v-card-text>Правильный ответ</v-card-text>
                         </v-card>
-                        <v-card
+                        <v-card color="error" class="white--text"
                             v-if="!isRightAnswer && actualAnswerSent">
                             <v-card-text>Неправильный ответ</v-card-text>
                         </v-card>
@@ -222,7 +222,8 @@
 
                 if (!this.task && this.$route.params.difficulty_name && !this.$route.query.task_id) {
                     await this.getRandomTask()
-                    this.$router.push(`/tasks/${this.selectedTheme.name}/${this.selectedSubtheme.name}/${this.selectedDifficulty.name}/${this.task.objectId.singleValue}`)
+                    if (this.task)
+                        this.$router.push(`/tasks/${this.selectedTheme.name}/${this.selectedSubtheme.name}/${this.selectedDifficulty.name}/${this.task.objectId.singleValue}`)
                 }
 
                 if (!this.task && this.$route.query.task_id)
@@ -281,8 +282,13 @@
 
             async getRandomTask() {
                 try {
-                    let res = await axios.get(`/api/tasks/random`)
-                    this.task = res.data;
+                    let res = await axios.get(`/api/tasks/${this.selectedSubtheme.name}/${this.selectedDifficulty.name}`)
+                    console.log(res)
+                    if (res.data === "") {
+                        this.task = null
+                        return
+                    } else
+                        this.task = res.data;
                     console.log(this.task)
                 } catch(e) {
                     if (e.response) {
