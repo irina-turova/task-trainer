@@ -95,22 +95,23 @@
                                 >Отправить ответ
                         </v-btn>
                         <v-btn
+                                v-if="!gotSolution"
                                 flat
                                 color="orange"
-                        @click="gotSolution = true"
+                        @click="useHint"
                         >Узнать решение
                         </v-btn>
                     </v-card-actions>
                 </v-card>
 
-                <v-card v-if="gotSolution || actualAnswer">
+                <v-card v-if="gotSolution || actualAnswerSent">
                     <v-card-text
                         v-if="gotSolution"
                         v-html="renderedTaskExplanation">
                     </v-card-text>
                     <v-card-actions>
                         <v-btn
-                                v-if="actualAnswerSent"
+                                v-if="actualAnswerSent || gotSolution"
                                 color="orange"
                                 flat
                         >Следующая задача</v-btn>
@@ -188,7 +189,7 @@
             renderedTaskExplanation() {
                 let generator = new HtmlGenerator({ hyphenate: false })
 
-                let doc = parse(this.task.explanation, { generator: generator }).htmlDocument()
+                let doc = parse(this.task.explanation + "\n\rПравильный ответ: " + this.task.rightAnswer, { generator: generator }).htmlDocument()
 
                 let result = doc.body.childNodes[0]
                 console.log(result.innerHTML)
@@ -312,6 +313,26 @@
                         console.log(response);
                         this.actualAnswerSent = true
                         this.isRightAnswer = response.data
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    }); 
+            },
+
+            async useHint() {
+                this.gotSolution = true;
+                
+                if (this.actualAnswerSent)
+                    return;
+
+                var data = {
+                    taskId: this.task.objectId.singleValue,
+                    actualAnswer: "",
+                    }
+                axios.post('/api/tasks/check', data)
+                    .then((response) => {
+                        console.log(response);
+
                     })
                     .catch((error) => {
                         console.log(error);
