@@ -71,16 +71,28 @@
                         <v-text-field
                                 placeholder="1.2"
                                 label="Ответ на задачу"
+                                v-model="actualAnswer"
                                 >
                         </v-text-field>
+                        <v-card
+                            v-if="isRightAnswer && actualAnswerSent">
+                            <v-card-text>Правильный ответ</v-card-text>
+                        </v-card>
+                        <v-card
+                            v-if="!isRightAnswer && actualAnswerSent">
+                            <v-card-text>Неправильный ответ</v-card-text>
+                        </v-card>
                     </v-card-text>
+
 
 
                     <v-card-actions>
                         <v-btn
-                                v-if="!gotSolution"
+                                v-if="!gotSolution && !actualAnswerSent"
                                 flat
-                                color="orange">Отправить ответ
+                                color="orange"
+                                @click="sendSolution"
+                                >Отправить ответ
                         </v-btn>
                         <v-btn
                                 flat
@@ -91,11 +103,14 @@
                     </v-card-actions>
                 </v-card>
 
-                <v-card v-if="gotSolution">
-                    <v-card-text v-html="renderedTaskExplanation">
+                <v-card v-if="gotSolution || actualAnswer">
+                    <v-card-text
+                        v-if="gotSolution"
+                        v-html="renderedTaskExplanation">
                     </v-card-text>
                     <v-card-actions>
                         <v-btn
+                                v-if="actualAnswerSent"
                                 color="orange"
                                 flat
                         >Следующая задача</v-btn>
@@ -127,6 +142,9 @@
                 subthemesLoading: false,
                 difficultiesLoading: false,
                 gotSolution: false,
+                actualAnswer: null,
+                actualAnswerSent : false,
+                isRightAnswer: false
             }
         },
 
@@ -282,11 +300,27 @@
                         alert(e.message)
                     }
                 }
+            },
+
+            async sendSolution() {
+                var data = {
+                    taskId: this.task.objectId.singleValue,
+                    actualAnswer: this.actualAnswer,
+                    }
+                axios.post('/api/tasks/check', data)
+                    .then((response) => {
+                        console.log(response);
+                        this.actualAnswerSent = true
+                        this.isRightAnswer = response.data
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    }); 
             }
+        
         }
     }
 </script>
 
 <style scoped>
-
 </style>

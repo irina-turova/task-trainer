@@ -1,11 +1,24 @@
 package com.trainer.routers
 
+import apache.cayenne.mappings.Task
+import com.google.gson.Gson
+import com.google.gson.JsonParser
+import com.google.gson.reflect.TypeToken
+import com.trainer.LoginSession
 import com.trainer.controllers.TaskController
 import io.ktor.application.call
+import io.ktor.gson.GsonConverter
+import io.ktor.request.receive
+import io.ktor.request.receiveText
 import io.ktor.response.respond
+import io.ktor.response.respondText
 import io.ktor.routing.Route
 import io.ktor.routing.get
+import io.ktor.routing.post
 import io.ktor.routing.route
+import io.ktor.sessions.get
+import io.ktor.sessions.sessions
+import org.omg.CORBA.Object
 
 fun Route.tasks() {
 
@@ -22,6 +35,15 @@ fun Route.tasks() {
                 call.parameters["taskId"]
             )
             call.respond(task ?: "")
+        }
+        post("check"){
+            val json = call.receiveText()
+            val jsonAsMap: Map<String, String> = Gson().fromJson(json, object : TypeToken<Map<String, String>>() {}.type)
+            call.respond(
+                TaskController.check(
+                    jsonAsMap["taskId"]!!.toInt(),
+                    call.sessions.get<LoginSession>()!!.id.toInt(),
+                    jsonAsMap["actualAnswer"].toString()))
         }
     }
 }
