@@ -18,7 +18,7 @@ object SubthemeController {
         return try {
             val ctx = OrmManager.runtime.newContext()
             val subtheme = ctx.newObject(Subtheme::class.java)
-            subtheme.initWithJson(json)
+            subtheme.initWithJson(json, ctx)
 
             val nameUnique = ObjectSelect.query(Subtheme::class.java).where(Subtheme.NAME.eq(subtheme.name))
                 .selectFirst(ctx) == null

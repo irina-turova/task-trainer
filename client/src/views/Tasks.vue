@@ -60,9 +60,8 @@
                     </v-card-title>
 
                     <v-card-text>
-                        <img src="http://docs.likenul.com/pars_docs/refs/19/18704/18704_html_538f9f8f.png"
-                               style="float:right; max-width:300px; max-height:300px"
-                        >
+                        <v-img :src="task.taskImage" style="display:block; margin: 0 auto; max-width:300px; max-height:300px"
+                        ></v-img>
 
 
                         <v-container v-html="renderedTaskText">                               >
@@ -108,6 +107,8 @@
                 </v-card>
 
                 <v-card v-if="gotSolution || actualAnswerSent">
+                    <v-img :src="task.solutionImage" style="display:block; margin: 0 auto; max-width:300px; max-height:300px"
+                    ></v-img>
                     <v-card-text
                         v-if="gotSolution"
                         v-html="renderedTaskExplanation">
@@ -149,7 +150,9 @@
                 gotSolution: false,
                 actualAnswer: null,
                 actualAnswerSent : false,
-                isRightAnswer: false
+                isRightAnswer: false,
+                taskImage: null,
+                solutionImage: null,
             }
         },
 
@@ -290,8 +293,19 @@
                     if (res.data === "") {
                         this.task = null
                         return
-                    } else
-                        this.task = res.data;
+                    }
+                    this.task = res.data;
+
+                    if (this.task.taskImage) {
+                        let taskImageRes = await axios.get(`/api/uploasds/${this.task.taskImage}`)
+                        this.taskImage = "userdata/" + taskImageRes.data
+                    }
+
+                    if (this.task.answerImage) {
+                        let taskImageRes = await axios.get(`/api/uploasds/${this.task.answerImage}`)
+                        this.solutionImage = "userdata/" + taskImageRes.data
+                    }
+
                     console.log(this.task)
                 } catch(e) {
                     if (e.response) {
@@ -306,6 +320,17 @@
                 try {
                     let res = await axios.get(`/api/tasks/${this.selectedSubtheme.name}/${this.selectedDifficulty.name}/${this.task.objectId.singleValue}`)
                     this.task = res.data;
+
+                    if (this.task.image1) {
+                        let taskImageRes = await axios.get(`/api/uploasds/${this.task.image1}`)
+                        this.taskImage = "userdata/" + taskImageRes.data
+                    }
+
+                    if (this.task.image) {
+                        let taskImageRes = await axios.get(`/api/uploasds/${this.task.image}`)
+                        this.solutionImage = "userdata/" + taskImageRes.data
+                    }
+                    console.log(this.taskImage)
                 } catch(e) {
                     if (e.response) {
                         alert(e.response.data)

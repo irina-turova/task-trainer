@@ -42,9 +42,9 @@ object TaskController {
         return try {
             val ctx = OrmManager.runtime.newContext()
             val task = ctx.newObject(Task::class.java)
-            task.initWithJson(json)
+            task.initWithJson(json, ctx)
 
-            val user = UserController.get(userId)
+            val user = Cayenne.objectForPK(ctx, User::class.java, userId)
             user.addToTasks(task)
 
             ctx.commitChanges()

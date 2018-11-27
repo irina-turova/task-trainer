@@ -55,6 +55,8 @@ fun Route.tasks() {
             if (result.first.value == 200) {
                 // val task = result.second as apache.cayenne.mappings.Task
                 call.respond(result.first)
+            } else {
+                call.respond(result.first, result.second)
             }
         }
     }

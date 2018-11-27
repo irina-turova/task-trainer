@@ -221,7 +221,7 @@ export default {
             if (this.selectedTheme && !this.subthemes) {
                 await this.getSubthemes()
             }
-            if (this.selectedSubtheme && !this.difficulties) {
+            if (!this.difficulties) {
                 await this.getDifficulties()
             }
         },

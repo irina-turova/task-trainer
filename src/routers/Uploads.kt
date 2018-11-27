@@ -10,6 +10,7 @@ import io.ktor.http.content.streamProvider
 import io.ktor.request.receiveMultipart
 import io.ktor.response.respond
 import io.ktor.routing.Route
+import io.ktor.routing.get
 import io.ktor.routing.post
 import io.ktor.sessions.get
 import io.ktor.sessions.sessions
@@ -24,6 +25,16 @@ import java.io.OutputStream
 fun Route.upload() {
 
     val uploadDir = "client/public/userdata"
+
+    get("uploads/{id}") {
+        val session = call.sessions.get<LoginSession>()
+        if (session == null) {
+            call.respond(HttpStatusCode.Forbidden.description("Not logged in"))
+            return@get
+        }
+        val imageName = UploadController.get(call.parameters["id"]?.toInt()!!)
+        call.respond(imageName)
+    }
 
     post("uploads") {
         val session = call.sessions.get<LoginSession>()
