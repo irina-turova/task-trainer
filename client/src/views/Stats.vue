@@ -7,7 +7,7 @@
                 <v-menu
                         ref="menuDateStart"
                         :close-on-content-click="false"
-                        v-model="menu"
+                        v-model="startDateMenu"
                         :nudge-right="40"
                         :return-value.sync="date"
                         lazy
@@ -18,13 +18,13 @@
                 >
                     <v-text-field
                             slot="activator"
-                            v-model="date"
+                            v-model="startDate"
                             label="Выберите дату начала"
                             readonly
                     ></v-text-field>
-                    <v-date-picker v-model="date" no-title scrollable>
+                    <v-date-picker v-model="startDate" @change="validateDates" no-title scrollable>
                         <v-spacer></v-spacer>
-                        <v-btn flat color="primary" @click="menu = false">Cancel</v-btn>
+                        <v-btn flat color="primary" @click="startDateMenu = false">Cancel</v-btn>
                         <v-btn flat color="primary" @click="$refs.menu.save(date)">OK</v-btn>
                     </v-date-picker>
                 </v-menu>
@@ -34,7 +34,7 @@
                 <v-menu
                         ref="menuDateFinish"
                         :close-on-content-click="false"
-                        v-model="menu"
+                        v-model="endDateMenu"
                         :nudge-right="40"
                         :return-value.sync="date"
                         lazy
@@ -45,13 +45,13 @@
                 >
                     <v-text-field
                             slot="activator"
-                            v-model="date"
+                            v-model="endDate"
                             label="Выберите дату окончания"
                             readonly
                     ></v-text-field>
-                    <v-date-picker v-model="date" no-title scrollable>
+                    <v-date-picker v-model="endDate" @change="validateDates" no-title scrollable>
                         <v-spacer></v-spacer>
-                        <v-btn flat color="primary" @click="menu = false">Cancel</v-btn>
+                        <v-btn flat color="primary" @click="endDateMenu = false">Cancel</v-btn>
                         <v-btn flat color="primary" @click="$refs.menu.save(date)">OK</v-btn>
                     </v-date-picker>
                 </v-menu>
@@ -70,6 +70,7 @@
                     label="Выберите темы"
                     multiple
                     chips
+                    @change="getChartData"
             />
         </v-flex>
 
@@ -80,39 +81,6 @@
                 :options="chartOptions"
             />
         </v-flex>
-
-        <!--<v-tabs-->
-                <!--slot="extension"-->
-                <!--v-model="model"-->
-                <!--slider-color="yellow"-->
-        <!--&gt;-->
-            <!--<v-tab>Неделя</v-tab>-->
-            <!--<v-tab-item>-->
-                <!--<GChart-->
-                        <!--type="ColumnChart"-->
-                        <!--:data="chartData"-->
-                        <!--:options="chartOptions"-->
-                <!--/>-->
-            <!--</v-tab-item>-->
-
-            <!--<v-tab>Месяц</v-tab>-->
-            <!--<v-tab-item>-->
-                <!--<GChart-->
-                        <!--type="ColumnChart"-->
-                        <!--:data="chartData1"-->
-                        <!--:options="chartOptions"-->
-                <!--/>-->
-            <!--</v-tab-item>-->
-
-            <!--<v-tab>Год</v-tab>-->
-            <!--<v-tab-item>-->
-                <!--<GChart-->
-                        <!--type="ColumnChart"-->
-                        <!--:data="chartData2"-->
-                        <!--:options="chartOptions"-->
-                <!--/>-->
-            <!--</v-tab-item>-->
-        <!--</v-tabs>-->
     </div>
 </template>
 
@@ -137,33 +105,20 @@
                     ["Ср", 660, 1120, 300],
                     ["Чт", 1030, 540, 350]
                 ],
-                chartData1: [
-                    ["Year", "Математика", "Физика", "Химия"],
-                    ["1", 1000, 435, 200],
-                    ["2", 1120, 460, 250],
-                    ["3", 660, 1030, 300],
-                    ["4", 1030, 540, 350]
-                ],
-                chartData2: [
-                    ["Year", "Математика", "Физика", "Химия"],
-                    ["9", 1000, 344, 200],
-                    ["10", 1170, 460, 250],
-                    ["11", 660, 1120, 300],
-                    ["12", 1030, 540, 656]
-                ],
                 chartOptions: {
                     chart: {
                         title: "Company Performance",
                         subtitle: "Sales, Expenses, and Profit: 2014-2017"
                     }
                 },
-                date: new Date().toISOString().substr(0, 10),
-                menu: false,
-                modal: false,
-                menu2: false,
+
+                startDate : new Date().toISOString().substr(0, 10),
+                endDate : new Date().toISOString().substr(0, 10),
+                startDateMenu: false,
+                endDateMenu: false,
                 selectedTheme: null,
                 themes: null,
-                themesLoading: false
+                themesLoading: false,
             };
         },
 
@@ -197,6 +152,33 @@
                 this.themesLoading = false
             },
 
+            async getChartData(){
+                if (!(this.selectedTheme && this.selectedTheme.length > 0)) return;
+
+                const params = {
+                    start: this.startDate,
+                    end: this.endDate,
+                    theme: this.themes
+                }
+
+                try {
+                    let res = await axios.get('/api/stats', params)
+                    this.chartData = res.data;
+                } catch(e) {
+                    if (e.response) {
+                        alert(e.response.data)
+                    } else {
+                        alert(e.message)
+                    }
+                }
+
+            },
+
+            validateDates(){
+                if (this.startDate > this.endDate) { 
+                    this.endDate = this.startDate 
+                }
+            }
         }
     };
 </script>

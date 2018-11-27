@@ -32,5 +32,10 @@ object TaskController {
         solution.user1 = Cayenne.objectForPK(OrmManager.context, User::class.java, userId)
         OrmManager.context.commitChanges()
         return solution.task.rightAnswer == solution.actualAnswer
+                //&&
+                //ObjectSelect
+                //   .query(Solution::class.java)
+                //   .where(Solution.TASK.eq(solution.task))
+                //   .selectFirst(OrmManager.context) == null
     }
 }
