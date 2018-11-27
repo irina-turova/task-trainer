@@ -1,132 +1,144 @@
 <template>
     <div>
-        <v-card>
-            <v-card-title>
-                <h3 class="headline mb-0">Создание новой задачи</h3>
-            </v-card-title>
+        <v-snackbar
+                v-model="snackbar"
+                :top="true"
+        >
+            {{ messageText }}
+        </v-snackbar>
 
-            <v-layout pa-3 row wrap>
-                <v-flex xs4 class="px-2">
-                    <v-combobox
-                            v-model="selectedTheme"
-                            :items="themes"
-                            item-text="description"
-                            item-value="name"
-                            :loading="themesLoading"
-                            label="Выберите тему"
-                            @change="getSubthemes"/>
-                    <theme-add-dialog
-                            ref="addThemeDialog"
-                            genitive-name="темы"
-                            accusative-name="тему"
-                            name-placeholder="Математика"
-                            alias-placeholder="math"
-                            :error-message="errorMessage"
-                            @submit="submitThemeAdd"
-                    ></theme-add-dialog>
-                </v-flex>
+        <v-form ref="form" v-model="valid">
+            <v-card>
+                <v-card-title>
+                    <h3 class="headline mb-0">Создание новой задачи</h3>
+                </v-card-title>
 
-                <v-flex v-if="selectedTheme" xs4 class="px-2">
-                    <v-combobox
-                            v-model="selectedSubtheme"
-                            :items="subthemes"
-                            item-text="description"
-                            item-value="name"
-                            label="Выберите подтему"
-                            @change="getDifficulties"/>
-                    <theme-add-dialog
-                            ref="addSubthemeDialog"
-                            genitive-name="подтемы"
-                            accusative-name="подтему"
-                            name-placeholder="Арифметика"
-                            alias-placeholder="arithmetic"
-                            @submit="submitSubthemeAdd"
-                    ></theme-add-dialog>
-                </v-flex>
+                <v-layout pa-3 row wrap>
+                    <v-flex xs4 class="px-2">
+                        <v-combobox
+                                v-model="selectedTheme"
+                                :rules="[v => !!v || 'Item is required']"
+                                :items="themes"
+                                item-text="description"
+                                item-value="name"
+                                :loading="themesLoading"
+                                label="Выберите тему"
+                                @change="getSubthemes"/>
+                        <theme-add-dialog
+                                ref="addThemeDialog"
+                                genitive-name="темы"
+                                accusative-name="тему"
+                                name-placeholder="Математика"
+                                alias-placeholder="math"
+                                :error-message="errorMessage"
+                                @submit="submitThemeAdd"
+                        ></theme-add-dialog>
+                    </v-flex>
 
-                <v-flex v-if="selectedSubtheme" xs4 class="px-2">
-                    <v-combobox
-                            v-model="selectedDifficulty"
-                            :items="difficulties"
-                            item-text="description"
-                            item-value="name"
-                            label="Выберите сложность"/>
-                </v-flex>
-            </v-layout>
+                    <v-flex v-if="selectedTheme" xs4 class="px-2">
+                        <v-combobox
+                                v-model="selectedSubtheme"
+                                :rules="[v => !!v || 'Item is required']"
+                                :items="subthemes"
+                                item-text="description"
+                                item-value="name"
+                                label="Выберите подтему"
+                                @change="getDifficulties"/>
+                        <theme-add-dialog
+                                ref="addSubthemeDialog"
+                                genitive-name="подтемы"
+                                accusative-name="подтему"
+                                name-placeholder="Арифметика"
+                                alias-placeholder="arithmetic"
+                                @submit="submitSubthemeAdd"
+                        ></theme-add-dialog>
+                    </v-flex>
 
-            <v-container>
-                <v-alert value="true" color="info" icon="fas fa-superscript" outline>
-                    Текст задачи может содержать LaTeX-разметку. С примером использования LaTeX можно ознакомиться по
-                    <a href="https://latex.js.org/playground.html">ссылке</a>
-                </v-alert>
-                <v-tabs>
-                    <v-tab>Редактирование</v-tab>
-                    <v-tab-item>
-                        <v-card flat>
-                            <v-card-title>
-                                <v-text-field
-                                        v-model="taskTitle"
-                                        placeholder="Найти сумму двух чисел"
-                                        label="Название задачи">
-                                </v-text-field>
-                            </v-card-title>
-                            <v-card-text>
-                                <v-textarea
-                                        v-model="taskText"
-                                        placeholder="Дано два числа: a и b. Нужно найти их сумму"
-                                        label="Текст задачи">
-                                </v-textarea>
-                                <!--<v-btn>Загрузить картинку к задаче</v-btn>-->
-                                <input ref="taskFileInput" type="file" name="taskImage" @change="uploadTaskImage"/>
+                    <v-flex v-if="selectedSubtheme" xs4 class="px-2">
+                        <v-combobox
+                                v-model="selectedDifficulty"
+                                :rules="[v => !!v || 'Item is required']"
+                                :items="difficulties"
+                                item-text="description"
+                                item-value="name"
+                                label="Выберите сложность"/>
+                    </v-flex>
+                </v-layout>
 
-                                <v-text-field
-                                        v-model="taskSolution"
-                                        placeholder="1.2"
-                                        label="Ответ на задачу">
-                                </v-text-field>
-                                <v-textarea
-                                        v-model="taskExplanation"
-                                        placeholder="Нужно взять два числа и сложить их столбиком"
-                                        label="Решение задачи">
-                                </v-textarea>
-                                <!--<v-btn>Загрузить картинку к решению</v-btn>-->
+                <v-container>
+                    <v-alert value="true" color="info" icon="fas fa-superscript" outline>
+                        Текст задачи может содержать LaTeX-разметку. С примером использования LaTeX можно ознакомиться по
+                        <a href="https://latex.js.org/playground.html">ссылке</a>
+                    </v-alert>
+                    <v-tabs>
+                        <v-tab>Редактирование</v-tab>
+                        <v-tab-item>
+                            <v-card flat>
+                                <v-card-title>
+                                    <v-text-field
+                                            v-model="taskTitle"
+                                            placeholder="Найти сумму двух чисел"
+                                            label="Название задачи">
+                                    </v-text-field>
+                                </v-card-title>
+                                <v-card-text>
+                                    <v-textarea
+                                            v-model="taskText"
+                                            placeholder="Дано два числа: a и b. Нужно найти их сумму"
+                                            label="Текст задачи">
+                                    </v-textarea>
+                                    <!--<v-btn>Загрузить картинку к задаче</v-btn>-->
+                                    <input ref="taskFileInput" type="file" name="taskImage" @change="uploadTaskImage"/>
 
-                                <input ref="solutionFileInput" type="file" name="solutionImage" @change="uploadSolutionImage"/>
-                            </v-card-text>
-                        </v-card>
-                    </v-tab-item>
+                                    <v-text-field
+                                            v-model="taskSolution"
+                                            placeholder="1.2"
+                                            label="Ответ на задачу">
+                                    </v-text-field>
+                                    <v-textarea
+                                            v-model="taskExplanation"
+                                            placeholder="Нужно взять два числа и сложить их столбиком"
+                                            label="Решение задачи">
+                                    </v-textarea>
+                                    <!--<v-btn>Загрузить картинку к решению</v-btn>-->
 
-                    <v-tab>Предпросмотр</v-tab>
-                    <v-tab-item>
-                        <v-card>
-                            <v-card-title primary-title>
-                                <h3 class="headline mb-0">{{taskTitle}}</h3>
-                            </v-card-title>
+                                    <input ref="solutionFileInput" type="file" name="solutionImage" @change="uploadSolutionImage"/>
+                                </v-card-text>
+                            </v-card>
+                        </v-tab-item>
 
-                            <v-img :src="taskImage" style="display:block; margin: 0 auto; max-width:300px; max-height:300px"
-                                   ></v-img>
-                            <v-card-text>
-                                <v-container v-html="renderedTaskText"></v-container>
-                                <div style="clear:both;"></div>
-                            </v-card-text>
-                        </v-card>
+                        <v-tab>Предпросмотр</v-tab>
+                        <v-tab-item>
+                            <v-card>
+                                <v-card-title primary-title>
+                                    <h3 class="headline mb-0">{{taskTitle}}</h3>
+                                </v-card-title>
 
-                        <v-card>
-                            <v-card-title><h3>Решение задачи:</h3></v-card-title>
-                            <v-img :src="solutionImage" style="display:block; margin: 0 auto; max-width:300px; max-height:300px"
-                            ></v-img>
-                            <v-card-text v-html="renderedTaskExplanation">
-                                <p>Квадрат гипотенузы равен сумме квадратов катетов!</p>
-                            </v-card-text>
-                        </v-card>
-                    </v-tab-item>
-                </v-tabs>
-            </v-container>
+                                <v-img :src="taskImage" style="display:block; margin: 0 auto; max-width:300px; max-height:300px"
+                                       ></v-img>
+                                <v-card-text>
+                                    <v-container v-html="renderedTaskText"></v-container>
+                                    <div style="clear:both;"></div>
+                                </v-card-text>
+                            </v-card>
 
-            <v-card-actions>
-                <v-btn flat color="orange" @click="createTask">Создать задачу</v-btn>
-            </v-card-actions>
-        </v-card>
+                            <v-card>
+                                <v-card-title><h3>Решение задачи:</h3></v-card-title>
+                                <v-img :src="solutionImage" style="display:block; margin: 0 auto; max-width:300px; max-height:300px"
+                                ></v-img>
+                                <v-card-text v-html="renderedTaskExplanation">
+                                    <p>Квадрат гипотенузы равен сумме квадратов катетов!</p>
+                                </v-card-text>
+                            </v-card>
+                        </v-tab-item>
+                    </v-tabs>
+                </v-container>
+
+                <v-card-actions>
+                    <v-btn flat color="orange" @click="createTask">Создать задачу</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-form>
     </div>
 </template>
 
@@ -142,6 +154,11 @@ export default {
 
     data () {
         return {
+            snackbar: false,
+            messageText: null,
+
+            valid: true,
+
             selectedTheme: null,
             selectedSubtheme: null,
             selectedDifficulty: null,
@@ -173,7 +190,6 @@ export default {
             let doc = parse(this.taskText, { generator: generator }).htmlDocument()
 
             let result = doc.body.childNodes[0]
-            console.log(result.innerHTML)
             return result.innerHTML
         },
         renderedTaskExplanation () {
@@ -182,7 +198,6 @@ export default {
             let doc = parse(this.taskExplanation, { generator: generator }).htmlDocument()
 
             let result = doc.body.childNodes[0]
-            console.log(result.innerHTML)
             return result.innerHTML
         }
     },
@@ -323,6 +338,10 @@ export default {
         },
 
         async createTask() {
+
+            if (!this.$refs.form.validate())
+                return
+
             let data = {
                 name: this.taskTitle,
                 text: this.taskText,
@@ -336,7 +355,15 @@ export default {
             }
             try {
                 let response = await axios.post("api/tasks", data)
-                location.reload()
+                if (response.status === 200) {
+                    this.messageText = "Задача успешно добавлена"
+                    this.snackbar = true
+                    await new Promise(resolve => setTimeout(resolve, 500))
+                    location.reload()
+                } else {
+                    this.snackbar = true
+                    this.messageText = "Во время добавления произошла ошибка. Попробуйте позже"
+                }
             } catch(e) {
 
             }

@@ -38,7 +38,7 @@ object TaskController {
             task.initWithJson(json)
 
             val user = UserController.get(userId)
-            task.user = user
+            user.addToTasks(task)
 
             OrmManager.context.commitChanges()
             Pair(HttpStatusCode(200, ""), task)

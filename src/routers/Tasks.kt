@@ -56,8 +56,8 @@ fun Route.tasks() {
             val result = TaskController.store(call.receiveText(), session.id.toInt())
 
             if (result.first.value == 200) {
-                val task = result.second as apache.cayenne.mappings.Task
-                call.respond(result.first, task)
+                // val task = result.second as apache.cayenne.mappings.Task
+                call.respond(result.first)
             }
         }
     }
