@@ -16,20 +16,21 @@ object ThemeController {
 
     fun store(json: String): Pair<HttpStatusCode, Any>  {
         return try {
-            val theme = OrmManager.context.newObject(Theme::class.java)
+            val ctx = OrmManager.runtime.newContext()
+            val theme = ctx.newObject(Theme::class.java)
             theme.initWithJson(json)
 
             val nameUnique = ObjectSelect.query(Theme::class.java).where(Theme.NAME.eq(theme.name))
-                .selectFirst(OrmManager.context) == null
+                .selectFirst(ctx) == null
             val descriptionUnique = ObjectSelect.query(Theme::class.java).where(Theme.DESCRIPTION.eq(theme.description))
-                .selectFirst(OrmManager.context) == null
+                .selectFirst(ctx) == null
 
             if (!descriptionUnique)
                 Pair(HttpStatusCode(422, ""), "Тема с таким названием уже существует")
             else if (!nameUnique)
                 Pair(HttpStatusCode(422, ""), "Тема с таким служебным названием уже существует")
             else {
-                OrmManager.context.commitChanges()
+                ctx.commitChanges()
                 Pair(HttpStatusCode(200, ""), theme)
             }
 

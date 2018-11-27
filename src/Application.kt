@@ -54,7 +54,8 @@ fun main(args: Array<String>) {
                 themes()
                 subthemes()
                 difficulties()
-                stats()
+                upload()
+				stats()
                 chat()
 
                 // Пример запроса, в котором проверяется сессия пользователя

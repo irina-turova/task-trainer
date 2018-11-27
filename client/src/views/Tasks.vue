@@ -8,6 +8,7 @@
                     class="px-2">
                 <v-combobox
                         v-model="selectedTheme"
+                        :disabled="!themes"
                         :items="themes"
                         item-text="description"
                         item-value="name"
@@ -23,6 +24,7 @@
                 <v-combobox
                         v-if="selectedTheme"
                         v-model="selectedSubtheme"
+                        :disabled="!subthemes"
                         :items="subthemes"
                         item-text="description"
                         item-value="name"
@@ -37,6 +39,7 @@
                     class="px-2">
                 <v-combobox
                         v-model="selectedDifficulty"
+                        :disabled="!difficulties"
                         :items="difficulties"
                         item-text="description"
                         item-value="name"
@@ -57,9 +60,8 @@
                     </v-card-title>
 
                     <v-card-text>
-                        <img src="http://docs.likenul.com/pars_docs/refs/19/18704/18704_html_538f9f8f.png"
-                               style="float:right; max-width:300px; max-height:300px"
-                        >
+                        <v-img :src="task.taskImage" style="display:block; margin: 0 auto; max-width:300px; max-height:300px"
+                        ></v-img>
 
 
                         <v-container v-html="renderedTaskText">                               >
@@ -74,11 +76,11 @@
                                 v-model="actualAnswer"
                                 >
                         </v-text-field>
-                        <v-card
+                        <v-card color="success" class="white--text"
                             v-if="isRightAnswer && actualAnswerSent">
                             <v-card-text>Правильный ответ</v-card-text>
                         </v-card>
-                        <v-card
+                        <v-card color="error" class="white--text"
                             v-if="!isRightAnswer && actualAnswerSent">
                             <v-card-text>Неправильный ответ</v-card-text>
                         </v-card>
@@ -90,14 +92,14 @@
                         <v-btn
                                 v-if="!gotSolution && !actualAnswerSent"
                                 flat
-                                color="orange"
+                                color="blue darken-4"
                                 @click="sendSolution"
                                 >Отправить ответ
                         </v-btn>
                         <v-btn
                                 v-if="!gotSolution"
                                 flat
-                                color="orange"
+                                color="blue darken-4"
                         @click="useHint"
                         >Узнать решение
                         </v-btn>
@@ -105,6 +107,8 @@
                 </v-card>
 
                 <v-card v-if="gotSolution || actualAnswerSent">
+                    <v-img :src="task.solutionImage" style="display:block; margin: 0 auto; max-width:300px; max-height:300px"
+                    ></v-img>
                     <v-card-text
                         v-if="gotSolution"
                         v-html="renderedTaskExplanation">
@@ -112,8 +116,9 @@
                     <v-card-actions>
                         <v-btn
                                 v-if="actualAnswerSent || gotSolution"
-                                color="orange"
+                                color="blue darken-4"
                                 flat
+                                @click="getNextTask"
                         >Следующая задача</v-btn>
                     </v-card-actions>
                 </v-card>
@@ -145,7 +150,9 @@
                 gotSolution: false,
                 actualAnswer: null,
                 actualAnswerSent : false,
-                isRightAnswer: false
+                isRightAnswer: false,
+                taskImage: null,
+                solutionImage: null,
             }
         },
 
@@ -172,7 +179,9 @@
                     this.task = null
             },
             ['$route.params.task_id'](newVal, oldVal) {
-
+                this.gotSolution = false
+                this.actualAnswer = null
+                this.actualAnswerSent = false
             },
         },
 
@@ -219,7 +228,8 @@
 
                 if (!this.task && this.$route.params.difficulty_name && !this.$route.query.task_id) {
                     await this.getRandomTask()
-                    this.$router.push(`/tasks/${this.selectedTheme.name}/${this.selectedSubtheme.name}/${this.selectedDifficulty.name}/${this.task.objectId.singleValue}`)
+                    if (this.task)
+                        this.$router.push(`/tasks/${this.selectedTheme.name}/${this.selectedSubtheme.name}/${this.selectedDifficulty.name}/${this.task.objectId.singleValue}`)
                 }
 
                 if (!this.task && this.$route.query.task_id)
@@ -278,8 +288,24 @@
 
             async getRandomTask() {
                 try {
-                    let res = await axios.get(`/api/tasks/random`)
+                    let res = await axios.get(`/api/tasks/${this.selectedSubtheme.name}/${this.selectedDifficulty.name}`)
+                    console.log(res)
+                    if (res.data === "") {
+                        this.task = null
+                        return
+                    }
                     this.task = res.data;
+
+                    if (this.task.taskImage) {
+                        let taskImageRes = await axios.get(`/api/uploasds/${this.task.taskImage}`)
+                        this.taskImage = "userdata/" + taskImageRes.data
+                    }
+
+                    if (this.task.answerImage) {
+                        let taskImageRes = await axios.get(`/api/uploasds/${this.task.answerImage}`)
+                        this.solutionImage = "userdata/" + taskImageRes.data
+                    }
+
                     console.log(this.task)
                 } catch(e) {
                     if (e.response) {
@@ -294,6 +320,17 @@
                 try {
                     let res = await axios.get(`/api/tasks/${this.selectedSubtheme.name}/${this.selectedDifficulty.name}/${this.task.objectId.singleValue}`)
                     this.task = res.data;
+
+                    if (this.task.image1) {
+                        let taskImageRes = await axios.get(`/api/uploasds/${this.task.image1}`)
+                        this.taskImage = "userdata/" + taskImageRes.data
+                    }
+
+                    if (this.task.image) {
+                        let taskImageRes = await axios.get(`/api/uploasds/${this.task.image}`)
+                        this.solutionImage = "userdata/" + taskImageRes.data
+                    }
+                    console.log(this.taskImage)
                 } catch(e) {
                     if (e.response) {
                         alert(e.response.data)
@@ -301,6 +338,11 @@
                         alert(e.message)
                     }
                 }
+            },
+
+            async getNextTask() {
+                await this.getRandomTask()
+                this.$router.push(`/tasks/${this.selectedTheme.name}/${this.selectedSubtheme.name}/${this.selectedDifficulty.name}/${this.task.objectId.singleValue}`)
             },
 
             async sendSolution() {

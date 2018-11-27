@@ -31,13 +31,14 @@ object UserController {
 
     fun store(json: String): Pair<HttpStatusCode, Any> {
         return try {
-            val user = OrmManager.context.newObject(User::class.java)
+            val ctx = OrmManager.runtime.newContext()
+            val user = ctx.newObject(User::class.java)
             user.initWithJson(json)
 
             val emailUnique = ObjectSelect.query(User::class.java).where(User.LOGIN.eq(user.login))
-                .selectFirst(OrmManager.context) == null
+                .selectFirst(ctx) == null
             if (emailUnique) {
-                OrmManager.context.commitChanges()
+                ctx.commitChanges()
                 Pair(HttpStatusCode(200, ""), user)
             } else
                 Pair(HttpStatusCode(422, ""), "Пользователь с таким email уже зарегистрирован")
