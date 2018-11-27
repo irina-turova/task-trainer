@@ -76,7 +76,9 @@
                                         placeholder="Дано два числа: a и b. Нужно найти их сумму"
                                         label="Текст задачи">
                                 </v-textarea>
-                                <v-btn>Загрузить картинку к задаче</v-btn>
+                                <!--<v-btn>Загрузить картинку к задаче</v-btn>-->
+                                <input ref="taskFileInput" type="file" name="taskImage" @change="uploadTaskImage"/>
+
                                 <v-text-field
                                         v-model="taskSolution"
                                         placeholder="1.2"
@@ -99,8 +101,9 @@
                                 <h3 class="headline mb-0">{{taskTitle}}</h3>
                             </v-card-title>
 
-                            <img src="http://docs.likenul.com/pars_docs/refs/19/18704/18704_html_538f9f8f.png"
-                                 style="float:right; max-width:300px; max-height:300px">
+                            <!--style="float:right; max-width:300px; max-height:300px"-->
+                            <v-img :src="taskImage"
+                                   ></v-img>
                             <v-card-text>
                                 <v-container v-html="renderedTaskText"></v-container>
                                 <div style="clear:both;"></div>
@@ -118,7 +121,7 @@
             </v-container>
 
             <v-card-actions>
-                <v-btn flat color="orange">Создать задачу</v-btn>
+                <v-btn flat color="orange" @click="createTask">Создать задачу</v-btn>
             </v-card-actions>
         </v-card>
     </div>
@@ -148,6 +151,7 @@ export default {
 
             taskTitle: '',
             taskText: '',
+            taskImage: 'http://docs.likenul.com/pars_docs/refs/19/18704/18704_html_538f9f8f.png',
             taskSolution: null,
             taskExplanation: '',
 
@@ -280,6 +284,27 @@ export default {
                     this.errorMessage = 'Возникла ошибка, попробуйте позже'
                 }
             }
+        },
+
+        async uploadImage(input) {
+            let formData = new FormData();
+            formData.append("image", input.files[0]);
+
+            return await axios.post("api/uploads", formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            })
+        },
+
+        async uploadTaskImage() {
+            let response = await this.uploadImage(this.$refs.taskFileInput)
+            this.taskImage = response.data.name
+            console.log(this.taskImage)
+        },
+
+        async createTask() {
+
         }
     }
 }
