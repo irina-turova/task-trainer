@@ -1,13 +1,11 @@
 package com.trainer.controllers
 
 import apache.cayenne.mappings.*
-import com.trainer.LoginSession
 import com.trainer.OrmManager
-import com.trainer.UserData
-import io.ktor.application.call
-import io.ktor.sessions.get
-import io.ktor.sessions.sessions
+import com.trainer.utils.initWithJson
+import io.ktor.http.HttpStatusCode
 import org.apache.cayenne.Cayenne
+import org.apache.cayenne.CayenneRuntimeException
 import org.apache.cayenne.query.ObjectSelect
 import java.time.LocalDateTime
 
@@ -32,5 +30,24 @@ object TaskController {
         solution.user1 = Cayenne.objectForPK(OrmManager.context, User::class.java, userId)
         OrmManager.context.commitChanges()
         return solution.task.rightAnswer == solution.actualAnswer
+    }
+
+    fun store(json: String, userId: Int): Pair<HttpStatusCode, Any>  {
+        return try {
+            val task = OrmManager.context.newObject(Task::class.java)
+            task.initWithJson(json)
+
+            val user = UserController.get(userId)
+            task.user = user
+
+            OrmManager.context.commitChanges()
+            Pair(HttpStatusCode(200, ""), task)
+
+
+        } catch (e: CayenneRuntimeException) {
+            Pair(HttpStatusCode(422, ""), "Полученные данные невалидны")
+        } catch (e: Exception) {
+            Pair(HttpStatusCode(500, ""), "Произошла ошибка во время добавления. Попробуйте позже")
+        }
     }
 }

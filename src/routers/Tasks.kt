@@ -6,8 +6,10 @@ import com.google.gson.JsonParser
 import com.google.gson.reflect.TypeToken
 import com.trainer.LoginSession
 import com.trainer.controllers.TaskController
+import com.trainer.controllers.ThemeController
 import io.ktor.application.call
 import io.ktor.gson.GsonConverter
+import io.ktor.http.HttpStatusCode
 import io.ktor.request.receive
 import io.ktor.request.receiveText
 import io.ktor.response.respond
@@ -44,6 +46,19 @@ fun Route.tasks() {
                     jsonAsMap["taskId"]!!.toInt(),
                     call.sessions.get<LoginSession>()!!.id.toInt(),
                     jsonAsMap["actualAnswer"].toString()))
+        }
+        post {
+            val session = call.sessions.get<LoginSession>()
+            if (session == null) {
+                call.respond(HttpStatusCode.Forbidden.description("Not logged in"))
+                return@post
+            }
+            val result = TaskController.store(call.receiveText(), session.id.toInt())
+
+            if (result.first.value == 200) {
+                val task = result.second as apache.cayenne.mappings.Task
+                call.respond(result.first, task)
+            }
         }
     }
 }

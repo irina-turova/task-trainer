@@ -154,10 +154,13 @@ export default {
 
             taskTitle: '',
             taskText: '',
-            taskImage: '',
-            solutionImage: '',
             taskSolution: null,
             taskExplanation: '',
+
+            taskImage: '',
+            solutionImage: '',
+            taskImageId: null,
+            solutionImageId: null,
 
             errorMessage: ''
         }
@@ -304,19 +307,39 @@ export default {
         async uploadTaskImage() {
             let response = await this.uploadImage(this.$refs.taskFileInput)
             console.log(response)
-            if (response.status === 200)
+            if (response.status === 200) {
                 this.taskImage = "userdata/" + response.data.name
+                this.taskImageId = response.data.id
+            }
         },
 
         async uploadSolutionImage() {
             let response = await this.uploadImage(this.$refs.solutionFileInput)
             console.log(response)
-            if (response.status === 200)
+            if (response.status === 200) {
                 this.solutionImage = "userdata/" + response.data.name
+                this.solutionImageId = response.data.id
+            }
         },
 
         async createTask() {
+            let data = {
+                name: this.taskTitle,
+                text: this.taskText,
+                rightAnswer: this.taskSolution,
+                explanation: this.taskExplanation,
 
+                subtheme: this.selectedSubtheme.objectId.singleValue,
+                difficulty: this.selectedDifficulty.objectId.singleValue,
+                taskImage: this.taskImageId,
+                solutionImage: this.solutionImageId
+            }
+            try {
+                let response = await axios.post("api/tasks", data)
+                location.reload()
+            } catch(e) {
+
+            }
         }
     }
 }
