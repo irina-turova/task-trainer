@@ -17,6 +17,7 @@
                     <v-flex xs4 class="px-2">
                         <v-combobox
                                 v-model="selectedTheme"
+                                :disabled="!themes"
                                 :rules="[v => !!v || 'Item is required']"
                                 :items="themes"
                                 item-text="description"
@@ -38,6 +39,7 @@
                     <v-flex v-if="selectedTheme" xs4 class="px-2">
                         <v-combobox
                                 v-model="selectedSubtheme"
+                                :disabled="!subthemes"
                                 :rules="[v => !!v || 'Item is required']"
                                 :items="subthemes"
                                 item-text="description"
@@ -57,6 +59,7 @@
                     <v-flex v-if="selectedSubtheme" xs4 class="px-2">
                         <v-combobox
                                 v-model="selectedDifficulty"
+                                :disabled="!difficulties"
                                 :rules="[v => !!v || 'Item is required']"
                                 :items="difficulties"
                                 item-text="description"
@@ -135,7 +138,7 @@
                 </v-container>
 
                 <v-card-actions>
-                    <v-btn flat color="orange" @click="createTask">Создать задачу</v-btn>
+                    <v-btn flat color="blue darken-4" @click="createTask">Создать задачу</v-btn>
                 </v-card-actions>
             </v-card>
         </v-form>

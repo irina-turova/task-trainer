@@ -8,6 +8,7 @@
                     class="px-2">
                 <v-combobox
                         v-model="selectedTheme"
+                        :disabled="!themes"
                         :items="themes"
                         item-text="description"
                         item-value="name"
@@ -23,6 +24,7 @@
                 <v-combobox
                         v-if="selectedTheme"
                         v-model="selectedSubtheme"
+                        :disabled="!subthemes"
                         :items="subthemes"
                         item-text="description"
                         item-value="name"
@@ -37,6 +39,7 @@
                     class="px-2">
                 <v-combobox
                         v-model="selectedDifficulty"
+                        :disabled="!difficulties"
                         :items="difficulties"
                         item-text="description"
                         item-value="name"
@@ -90,14 +93,14 @@
                         <v-btn
                                 v-if="!gotSolution && !actualAnswerSent"
                                 flat
-                                color="orange"
+                                color="blue darken-4"
                                 @click="sendSolution"
                                 >Отправить ответ
                         </v-btn>
                         <v-btn
                                 v-if="!gotSolution"
                                 flat
-                                color="orange"
+                                color="blue darken-4"
                         @click="useHint"
                         >Узнать решение
                         </v-btn>
@@ -112,7 +115,7 @@
                     <v-card-actions>
                         <v-btn
                                 v-if="actualAnswerSent || gotSolution"
-                                color="orange"
+                                color="blue darken-4"
                                 flat
                                 @click="getNextTask"
                         >Следующая задача</v-btn>
