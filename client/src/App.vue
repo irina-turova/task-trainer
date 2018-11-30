@@ -35,9 +35,6 @@
             <registration-dialog v-if="!user"></registration-dialog>
 
             <v-btn v-if="user" flat>
-                <!--<v-icon left
-                        color="secondary"
-                >far fa-user</v-icon>-->
                 <v-avatar size="35"><img :src="gravatarLink"></v-avatar>
                 &nbsp;&nbsp;{{ userName }}
             </v-btn>
@@ -105,6 +102,7 @@
                 this.$root.user = undefined
                 localStorage.removeItem("user")
                 axios.post("/api/users/logout")
+                this.$router.push('/')
             }
         }
         
