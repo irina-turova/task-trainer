@@ -351,7 +351,7 @@
 
             async getNextTask() {
                 await this.getRandomTask()
-                this.$router.push(`/tasks/${this.selectedTheme.name}/${this.selectedSubtheme.name}/${this.selectedDifficulty.name}/${this.task.objectId.singleValue}`)
+                this.$router.push(`/tasks/${this.selectedTheme.name}/${this.selectedSubtheme.name}/${this.selectedDifficulty.name}/${this.task ? this.task.objectId.singleValue : ''}`)
             },
 
             async sendSolution() {
