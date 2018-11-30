@@ -5,7 +5,7 @@
             width="500"
             persistent
     >
-        <v-btn :block="true" slot="activator">Добавить {{accusativeName}}</v-btn>
+        <v-btn :block="true" slot="activator" class="accent">Добавить {{accusativeName}}</v-btn>
 
         <v-form ref="form" v-model="valid">
             <v-card>
@@ -48,7 +48,7 @@
 
                 <v-card-actions>
                     <v-spacer/>
-                    <v-btn color="primary" @click="submit($event)">Добавить</v-btn>
+                    <v-btn class="accent" @click="submit($event)">Добавить</v-btn>
                     <v-btn color="primary" flat @click="clear">Отмена</v-btn>
                 </v-card-actions>
             </v-card>

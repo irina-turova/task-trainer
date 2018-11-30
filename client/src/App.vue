@@ -1,6 +1,6 @@
 <template>
     <v-app id="app">
-        <v-toolbar app>
+        <v-toolbar app class="primary" dark>
             <!--<router-link to="/">Home</router-link>-->
             <!--<router-link to="/about">About</router-link>-->
 
@@ -41,16 +41,17 @@
 
             <v-btn  v-if="user"
                     @click="logout()"
+                    class="accent"
             >Выйти</v-btn>
 
         </v-toolbar>
 
-        <v-content>
+        <v-content class="light-blue lighten-5">
             <v-container fill-height>
                 <v-container
                         align-start
                         fill-height
-                        class="elevation-2">
+                        class="elevation-2 white">
                     <v-layout>
                         <v-flex>
                             <router-view/>
@@ -62,9 +63,10 @@
 
         <v-footer
                 app
-                class="pa-3">
-            <v-spacer/>
-            <div>&copy; {{ new Date().getFullYear() }}</div>
+                class="primary" dark>
+            <v-container px-4 py-1 class="text-xs-center">
+                Тренажёр для решения задач онлайн. All rights reserved &copy; {{ new Date().getFullYear() }}
+            </v-container>
         </v-footer>
 
     </v-app>

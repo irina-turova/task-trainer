@@ -9,6 +9,7 @@ import router from './router'
 import VueGoogleCharts from 'vue-google-charts'
 import '@fortawesome/fontawesome-free/css/all.css'
 import VueNativeSock from 'vue-native-websocket'
+import colors from 'vuetify/es5/util/colors'
 
 Vue.use(Vuetify, {
     customProperties: true,
@@ -16,6 +17,11 @@ Vue.use(Vuetify, {
     lang: {
         locales: {ru},
         current: 'ru'
+    },
+    theme: {
+        primary: colors.indigo.darken1,
+        secondary: colors.indigo.accent1,
+        accent: colors.teal,
     }
 });
 

@@ -2,7 +2,8 @@
     <v-dialog
             v-model="dialog"
             width="500">
-        <v-btn slot="activator">Войти</v-btn>
+        <v-btn slot="activator" class="accent"
+        >Войти</v-btn>
 
         <v-form ref="form" v-model="valid">
             <v-card>
@@ -57,9 +58,8 @@
                 <v-card-actions>
                     <v-spacer/>
                     <v-btn
-                            color="primary"
                             @click="submit"
-
+                            class="accent"
                     >
                         Войти
                     </v-btn>

@@ -3,9 +3,7 @@
             v-model="dialog"
             width="500"
     >
-        <v-btn
-                slot="activator"
-        >
+        <v-btn slot="activator" class="accent">
             Зарегистрироваться
         </v-btn>
 
@@ -83,8 +81,8 @@
                 <v-card-actions>
                     <v-spacer/>
                     <v-btn
-                            color="primary"
                             @click="submit"
+                            class="accent"
                     >
                         Зарегистрироваться
                     </v-btn>

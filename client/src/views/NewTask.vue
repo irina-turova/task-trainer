@@ -87,15 +87,25 @@
                                     <v-textarea
                                             v-model="taskText"
                                             placeholder="Дано два числа: a и b. Нужно найти их сумму"
-                                            label="Текст задачи">
+                                            label="Текст задачи"
+                                            mb-2
+                                    >
                                     </v-textarea>
                                     <!--<v-btn>Загрузить картинку к задаче</v-btn>-->
-                                    <input ref="taskFileInput" type="file" name="taskImage" @change="uploadTaskImage"/>
+                                    <p>
+                                        <label class="v-btn accent">
+                                            Загрузить картинку к задаче
+                                            <input ref="taskFileInput" type="file" name="taskImage" @change="uploadTaskImage" v-show="false"/>
+                                        </label>
+                                        {{ taskSrcImage }}
+                                    </p>
 
                                     <v-text-field
                                             v-model="taskSolution"
                                             placeholder="1.2"
-                                            label="Ответ на задачу">
+                                            label="Ответ на задачу"
+
+                                    >
                                     </v-text-field>
                                     <v-textarea
                                             v-model="taskExplanation"
@@ -103,8 +113,13 @@
                                             label="Решение задачи">
                                     </v-textarea>
                                     <!--<v-btn>Загрузить картинку к решению</v-btn>-->
-
-                                    <input ref="solutionFileInput" type="file" name="solutionImage" @change="uploadSolutionImage"/>
+                                    <p>
+                                        <label class="v-btn accent">
+                                            Загрузить картинку к решению
+                                            <input ref="solutionFileInput" type="file" name="solutionImage" @change="uploadSolutionImage" v-show="false"/>
+                                        </label>
+                                        {{ solutionSrcImage }}
+                                    </p>
                                 </v-card-text>
                             </v-card>
                         </v-tab-item>
@@ -137,7 +152,7 @@
                 </v-container>
 
                 <v-card-actions>
-                    <v-btn flat color="blue darken-4" @click="createTask">Создать задачу</v-btn>
+                    <v-btn class="accent" @click="createTask">Создать задачу</v-btn>
                 </v-card-actions>
             </v-card>
         </v-form>
@@ -177,7 +192,9 @@ export default {
             taskExplanation: '',
 
             taskImage: '',
+            taskSrcImage: '',
             solutionImage: '',
+            solutionSrcImage: '',
             taskImageId: null,
             solutionImageId: null,
 
@@ -320,7 +337,8 @@ export default {
             })
         },
 
-        async uploadTaskImage() {
+        async uploadTaskImage($event) {
+            this.taskSrcImage = $event.target.value
             let response = await this.uploadImage(this.$refs.taskFileInput)
             console.log(response)
             if (response.status === 200) {
@@ -329,7 +347,8 @@ export default {
             }
         },
 
-        async uploadSolutionImage() {
+        async uploadSolutionImage($event) {
+            this.solutionSrcImage = $event.target.value
             let response = await this.uploadImage(this.$refs.solutionFileInput)
             console.log(response)
             if (response.status === 200) {

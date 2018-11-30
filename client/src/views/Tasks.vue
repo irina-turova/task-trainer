@@ -70,7 +70,7 @@
                     </v-card-title>
 
                     <v-card-text>
-                        <v-img :src="'/' + taskImage" style="display:block; margin: 0 auto; max-width:300px; max-height:300px"
+                        <v-img v-if="taskImage" :src="'/' + taskImage" style="display:block; margin: 0 auto; max-width:300px; max-height:300px"
                         ></v-img>
 
 
@@ -101,15 +101,14 @@
                     <v-card-actions>
                         <v-btn
                                 v-if="!gotSolution && !actualAnswerSent"
-                                flat
-                                color="blue darken-4"
+                                color="accent"
                                 @click="sendSolution"
                                 >Отправить ответ
                         </v-btn>
                         <v-btn
                                 v-if="!gotSolution"
                                 flat
-                                color="blue darken-4"
+                                color="primary"
                         @click="useHint"
                         >Узнать решение
                         </v-btn>
@@ -117,7 +116,7 @@
                 </v-card>
 
                 <v-card v-if="gotSolution || actualAnswerSent">
-                    <v-img :src="'/' + solutionImage" style="display:block; margin: 0 auto; max-width:300px; max-height:300px"
+                    <v-img v-if="solutionImage" :src="'/' + solutionImage" style="display:block; margin: 0 auto; max-width:300px; max-height:300px"
                     ></v-img>
                     <v-card-text
                         v-if="gotSolution"
@@ -126,7 +125,7 @@
                     <v-card-actions>
                         <v-btn
                                 v-if="actualAnswerSent || gotSolution"
-                                color="blue darken-4"
+                                color="accent"
                                 flat
                                 @click="getNextTask"
                         >Следующая задача</v-btn>
