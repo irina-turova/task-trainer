@@ -35,6 +35,13 @@ fun Route.tasks() {
             )
             call.respond(task ?: "")
         }
+        get("taskimage/{imagetype}/{taskId}") {
+            val image = TaskController.getTaskImage(
+                call.parameters["imagetype"],
+                call.parameters["taskId"]
+            )
+            call.respond(image.first, image.second)
+        }
         post("check"){
             val json = call.receiveText()
             val jsonAsMap: Map<String, String> = Gson().fromJson(json, object : TypeToken<Map<String, String>>() {}.type)

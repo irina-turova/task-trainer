@@ -31,7 +31,7 @@ object UserController {
 
     fun store(json: String): Pair<HttpStatusCode, Any> {
         return try {
-            val ctx = OrmManager.runtime.newContext()
+            val ctx = OrmManager.newContext()
             val user = ctx.newObject(User::class.java)
             user.initWithJson(json)
 

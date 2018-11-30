@@ -16,7 +16,7 @@ object ThemeController {
 
     fun store(json: String): Pair<HttpStatusCode, Any>  {
         return try {
-            val ctx = OrmManager.runtime.newContext()
+            val ctx = OrmManager.newContext()
             val theme = ctx.newObject(Theme::class.java)
             theme.initWithJson(json)
 

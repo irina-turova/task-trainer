@@ -70,7 +70,7 @@
                     </v-card-title>
 
                     <v-card-text>
-                        <v-img :src="task.taskImage" style="display:block; margin: 0 auto; max-width:300px; max-height:300px"
+                        <v-img :src="'/' + taskImage" style="display:block; margin: 0 auto; max-width:300px; max-height:300px"
                         ></v-img>
 
 
@@ -117,7 +117,7 @@
                 </v-card>
 
                 <v-card v-if="gotSolution || actualAnswerSent">
-                    <v-img :src="task.solutionImage" style="display:block; margin: 0 auto; max-width:300px; max-height:300px"
+                    <v-img :src="'/' + solutionImage" style="display:block; margin: 0 auto; max-width:300px; max-height:300px"
                     ></v-img>
                     <v-card-text
                         v-if="gotSolution"
@@ -235,13 +235,14 @@
                 if (!this.selectedDifficulty && this.$route.params.difficulty_name)
                     this.selectedDifficulty = this.difficulties.find(value => value.name === this.$route.params.difficulty_name)
 
-                if (!this.task && this.$route.params.difficulty_name && !this.$route.query.task_id) {
+                if (!this.task && this.$route.params.difficulty_name && !this.$route.params.task_id) {
+                    console.log("will get random")
                     await this.getRandomTask()
                     if (this.task)
                         this.$router.push(`/tasks/${this.selectedTheme.name}/${this.selectedSubtheme.name}/${this.selectedDifficulty.name}/${this.task.objectId.singleValue}`)
                 }
 
-                if (!this.task && this.$route.query.task_id)
+                if (!this.task && this.$route.params.task_id)
                     await this.getCurrentTask()
             },
 
@@ -297,6 +298,7 @@
 
             async getRandomTask() {
                 try {
+                    console.log("getting random task")
                     let res = await axios.get(`/api/tasks/${this.selectedSubtheme.name}/${this.selectedDifficulty.name}`)
                     console.log(res)
                     if (res.data === "") {
@@ -327,17 +329,22 @@
 
             async getCurrentTask() {
                 try {
-                    let res = await axios.get(`/api/tasks/${this.selectedSubtheme.name}/${this.selectedDifficulty.name}/${this.task.objectId.singleValue}`)
+                    console.log("getting current task" + `/api/tasks/${this.selectedSubtheme.name}/${this.selectedDifficulty.name}/${this.$route.params.task_id}`)
+                    let res = await axios.get(`/api/tasks/${this.selectedSubtheme.name}/${this.selectedDifficulty.name}/${this.$route.params.task_id}`)
                     this.task = res.data;
+                    console.log(res.data)
 
                     if (this.task.image1) {
-                        let taskImageRes = await axios.get(`/api/uploasds/${this.task.image1}`)
+                        let taskImageRes = await axios.get(`/api/tasks/taskimage/task/${this.task.objectId.singleValue}`)
+                        console.log("data")
+                        console.log(taskImageRes.data)
                         this.taskImage = "userdata/" + taskImageRes.data
                     }
 
                     if (this.task.image) {
-                        let taskImageRes = await axios.get(`/api/uploasds/${this.task.image}`)
+                        let taskImageRes = await axios.get(`/api/tasks/taskimage/solution/${this.task.objectId.singleValue}`)
                         this.solutionImage = "userdata/" + taskImageRes.data
+                        console.log(this.solutionImage)
                     }
                     console.log(this.taskImage)
                 } catch(e) {

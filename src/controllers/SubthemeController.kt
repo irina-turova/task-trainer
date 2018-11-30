@@ -16,7 +16,7 @@ object SubthemeController {
 
     fun store(json: String): Pair<HttpStatusCode, Any>  {
         return try {
-            val ctx = OrmManager.runtime.newContext()
+            val ctx = OrmManager.newContext()
             val subtheme = ctx.newObject(Subtheme::class.java)
             subtheme.initWithJson(json, ctx)
 

@@ -12,14 +12,14 @@ data class ImageData(val id: Int, val name: String)
 object UploadController {
 
     fun get(id: Int): String {
-        val ctx = OrmManager.runtime.newContext()
+        val ctx = OrmManager.newContext()
         val image = Cayenne.objectForPK(ctx, Image::class.java, id)
         return if (image != null) image.name else ""
     }
 
     fun store(fileName: String): Pair<HttpStatusCode, ImageData?> {
         return try {
-            val ctx = OrmManager.runtime.newContext()
+            val ctx = OrmManager.newContext()
             val image = ctx.newObject(Image::class.java)
             image.name = fileName
             image.description = "default"

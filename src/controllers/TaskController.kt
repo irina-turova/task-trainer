@@ -27,8 +27,27 @@ object TaskController {
         return if (task.subtheme1.name == subthemeName && task.difficulty.name == difficultyName) task else null
     }
 
+    fun getTaskImage(imageType: String?, taskId: String?): Pair<HttpStatusCode, String> {
+        return try {
+            val ctx = OrmManager.newContext()
+            val task = Cayenne.objectForPK(ctx, Task::class.java, taskId?.toIntOrNull() ?: "")
+                ?: throw java.lang.Exception("The task with the given id does not exists")
+
+            Pair(HttpStatusCode(200, ""),
+                when (imageType) {
+                    "task" -> task.image?.name ?: ""
+                    "solution" -> task.image1?.name ?: ""
+                    else -> ""
+                }
+            )
+
+        } catch (e: Exception) {
+            Pair(HttpStatusCode(500, ""), e.message ?: "")
+        }
+    }
+
     fun check(taskId: Int, userId: Int, actualAnswer: String): Boolean {
-        val ctx = OrmManager.runtime.newContext()
+        val ctx = OrmManager.newContext()
         val solution = ctx.newObject(Solution::class.java)
         solution.actualAnswer = actualAnswer
         solution.task = Cayenne.objectForPK(ctx, Task::class.java, taskId)
@@ -45,7 +64,7 @@ object TaskController {
 
     fun store(json: String, userId: Int): Pair<HttpStatusCode, Any>  {
         return try {
-            val ctx = OrmManager.runtime.newContext()
+            val ctx = OrmManager.newContext()
             val task = ctx.newObject(Task::class.java)
             task.initWithJson(json, ctx)
 
