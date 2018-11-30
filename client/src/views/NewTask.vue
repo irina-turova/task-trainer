@@ -44,8 +44,7 @@
                                 :items="subthemes"
                                 item-text="description"
                                 item-value="name"
-                                label="Выберите подтему"
-                                @change="getDifficulties"/>
+                                label="Выберите подтему"/>
                         <theme-add-dialog
                                 ref="addSubthemeDialog"
                                 genitive-name="подтемы"
@@ -205,7 +204,7 @@ export default {
         }
     },
 
-    created () {
+    created() {
         this.fetch()
     },
 
@@ -259,7 +258,6 @@ export default {
         },
 
         async getDifficulties () {
-            if (!this.selectedSubtheme) { return }
 
             this.difficultiesLoading = true
             try {
