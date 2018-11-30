@@ -28,7 +28,13 @@ fun Route.tasks() {
             call.respond(task ?: "")
         }
         get("{subthemeName}/{difficultyName}/{taskId}") {
+            val session = call.sessions.get<LoginSession>()
+            if (session == null) {
+                call.respond(HttpStatusCode.Forbidden.description("Not logged in"))
+                return@get
+            }
             val task = TaskController.get(
+                session.id.toInt(),
                 call.parameters["subthemeName"],
                 call.parameters["difficultyName"],
                 call.parameters["taskId"]

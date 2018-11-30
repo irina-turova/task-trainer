@@ -22,9 +22,10 @@ object TaskController {
         return task
     }
 
-    fun get(subthemeName: String?, difficultyName: String?, taskId: String?): Task? {
+    fun get(userId: Int, subthemeName: String?, difficultyName: String?, taskId: String?): Task? {
         val task = Cayenne.objectForPK(OrmManager.newContext(), Task::class.java, taskId?.toIntOrNull() ?: 0)
-        return if (task.subtheme1.name == subthemeName && task.difficulty.name == difficultyName) task else null
+        val userSolved = task.solutions.any { Cayenne.pkForObject(it.user1) == userId }
+        return if (!userSolved && task.subtheme1.name == subthemeName && task.difficulty.name == difficultyName) task else null
     }
 
     fun getTaskImage(imageType: String?, taskId: String?): Pair<HttpStatusCode, String> {

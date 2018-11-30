@@ -18,7 +18,7 @@
                         <v-combobox
                                 v-model="selectedTheme"
                                 :disabled="!themes"
-                                :rules="[v => !!v || 'Item is required']"
+                                :rules="[v => !!v || 'Обязательное поле']"
                                 :items="themes"
                                 item-text="description"
                                 item-value="name"
@@ -40,7 +40,7 @@
                         <v-combobox
                                 v-model="selectedSubtheme"
                                 :disabled="!subthemes"
-                                :rules="[v => !!v || 'Item is required']"
+                                :rules="[v => !!v || 'Обязательное поле']"
                                 :items="subthemes"
                                 item-text="description"
                                 item-value="name"
@@ -59,7 +59,7 @@
                         <v-combobox
                                 v-model="selectedDifficulty"
                                 :disabled="!difficulties"
-                                :rules="[v => !!v || 'Item is required']"
+                                :rules="[v => !!v || 'Обязательное поле']"
                                 :items="difficulties"
                                 item-text="description"
                                 item-value="name"
