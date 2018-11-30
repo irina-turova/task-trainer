@@ -5,7 +5,7 @@
             width="500"
             persistent
     >
-        <v-btn :block="true" slot="activator" class="accent">Добавить {{accusativeName}}</v-btn>
+        <v-btn :block="true" slot="activator" class="accent"><v-icon left>fas fa-plus</v-icon>Добавить {{accusativeName}}</v-btn>
 
         <v-form ref="form" v-model="valid">
             <v-card>

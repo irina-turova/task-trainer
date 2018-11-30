@@ -1,29 +1,26 @@
 <template>
     <v-app id="app">
         <v-toolbar app class="primary" dark>
-            <!--<router-link to="/">Home</router-link>-->
-            <!--<router-link to="/about">About</router-link>-->
-
-            <v-toolbar-title>Тренажер</v-toolbar-title>
+            <v-toolbar-title><v-icon>fas fa-user-graduate</v-icon> Тренажер</v-toolbar-title>
 
             <v-toolbar-items class="px-5">
 
                 <v-btn
                         v-if="user"
                         flat
-                        @click="$router.push('/tasks')">Задачи
+                        @click="$router.push('/tasks')"><v-icon>fas fa-graduation-cap</v-icon>&nbsp;&nbsp;Задачи
                 </v-btn>
 
                 <v-btn
                         v-if="user"
                         flat
-                        @click="$router.push('/stats')">Статистика
+                        @click="$router.push('/stats')"><v-icon>fas fa-chart-bar</v-icon>&nbsp;&nbsp;Статистика
                 </v-btn>
 
                 <v-btn
                         v-if="user && user.role !== 'student'"
                         flat
-                        @click="$router.push('/newtask')">Создание задачи
+                        @click="$router.push('/newtask')"><v-icon>fas fa-hammer</v-icon>&nbsp;&nbsp;Создание задачи
                 </v-btn>
 
             </v-toolbar-items>
@@ -42,7 +39,7 @@
             <v-btn  v-if="user"
                     @click="logout()"
                     class="accent"
-            >Выйти</v-btn>
+            >Выйти<v-icon right>fas fa-sign-out-alt</v-icon></v-btn>
 
         </v-toolbar>
 

@@ -94,7 +94,7 @@
                                     <!--<v-btn>Загрузить картинку к задаче</v-btn>-->
                                     <p>
                                         <label class="v-btn accent">
-                                            Загрузить картинку к задаче
+                                            <v-icon left dark>fas fa-upload</v-icon>Загрузить картинку к задаче
                                             <input ref="taskFileInput" type="file" name="taskImage" @change="uploadTaskImage" v-show="false"/>
                                         </label>
                                         {{ taskSrcImage }}
@@ -115,7 +115,7 @@
                                     <!--<v-btn>Загрузить картинку к решению</v-btn>-->
                                     <p>
                                         <label class="v-btn accent">
-                                            Загрузить картинку к решению
+                                            <v-icon left dark>fas fa-upload</v-icon>Загрузить картинку к решению
                                             <input ref="solutionFileInput" type="file" name="solutionImage" @change="uploadSolutionImage" v-show="false"/>
                                         </label>
                                         {{ solutionSrcImage }}
@@ -152,7 +152,7 @@
                 </v-container>
 
                 <v-card-actions>
-                    <v-btn class="accent" @click="createTask">Создать задачу</v-btn>
+                    <v-btn class="accent" @click="createTask"><v-icon left>fas fa-plus</v-icon>Создать задачу</v-btn>
                 </v-card-actions>
             </v-card>
         </v-form>

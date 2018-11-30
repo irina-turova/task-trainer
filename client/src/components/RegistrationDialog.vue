@@ -4,7 +4,7 @@
             width="500"
     >
         <v-btn slot="activator" class="accent">
-            Зарегистрироваться
+            <v-icon left>fas fa-user-plus</v-icon>Зарегистрироваться
         </v-btn>
 
         <v-form ref="form" v-model="valid">

@@ -74,8 +74,7 @@
                         ></v-img>
 
 
-                        <v-container v-html="renderedTaskText">                               >
-                        </v-container>
+                        <v-container v-html="renderedTaskText"></v-container>
 
                         <div style="clear:both;"></div>
 
@@ -103,7 +102,8 @@
                                 v-if="!gotSolution && !actualAnswerSent"
                                 color="accent"
                                 @click="sendSolution"
-                                >Отправить ответ
+                                >
+                            <v-icon left>fas fa-paper-plane</v-icon>Отправить ответ
                         </v-btn>
                         <v-btn
                                 v-if="!gotSolution"
@@ -128,7 +128,7 @@
                                 color="accent"
                                 flat
                                 @click="getNextTask"
-                        >Следующая задача</v-btn>
+                        >Следующая задача<v-icon right>fas fa-arrow-right</v-icon></v-btn>
                     </v-card-actions>
                 </v-card>
             </v-flex>
