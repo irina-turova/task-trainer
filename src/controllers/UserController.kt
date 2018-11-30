@@ -15,7 +15,7 @@ import org.apache.cayenne.query.ObjectSelect
 object UserController {
 
     fun find(credentials: UserPasswordCredential): UserIdPrincipal? {
-        val user = ObjectSelect.query(User::class.java).where(User.LOGIN.eq(credentials.name)).selectFirst(OrmManager.context)
+        val user = ObjectSelect.query(User::class.java).where(User.LOGIN.eq(credentials.name)).selectFirst(OrmManager.newContext())
             ?: return null
         val passwordHash = SecurityManager.getPasswordHash(credentials.password, user.salt)
         return if (passwordHash == user.password)
@@ -25,7 +25,7 @@ object UserController {
     }
 
     fun get(userId: Int): User {
-        val user = Cayenne.objectForPK(OrmManager.context, User::class.java, userId)
+        val user = Cayenne.objectForPK(OrmManager.newContext(), User::class.java, userId)
         return user
     }
 

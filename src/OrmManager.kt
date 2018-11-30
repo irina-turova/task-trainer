@@ -5,15 +5,10 @@ import org.apache.cayenne.configuration.server.ServerRuntime
 
 object OrmManager {
 
-    val context: ObjectContext
-    val runtime: ServerRuntime
+    val runtime: ServerRuntime = ServerRuntime.builder()
+        .addConfig("cayenne-project.xml")
+        .build()
 
-    init {
-        runtime = ServerRuntime.builder()
-            .addConfig("cayenne-project.xml")
-            .build()
-
-        context = runtime.newContext()
-    }
+    fun newContext(): ObjectContext = runtime.newContext()
 
 }

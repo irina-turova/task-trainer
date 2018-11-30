@@ -10,7 +10,7 @@ import org.apache.cayenne.query.ObjectSelect
 object ThemeController {
 
     fun get(): List<Theme> {
-        val themes = ObjectSelect.query(Theme::class.java).select(OrmManager.context)
+        val themes = ObjectSelect.query(Theme::class.java).select(OrmManager.newContext())
         return themes?.toList() ?: emptyList()
     }
 

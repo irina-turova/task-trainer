@@ -10,7 +10,7 @@ import org.apache.cayenne.query.ObjectSelect
 
 object SubthemeController {
     fun get(themeName: String?): List<Subtheme> {
-        val subthemes = ObjectSelect.query(Subtheme::class.java).where(Subtheme.THEME.dot(Theme.NAME).eq(themeName)).select(OrmManager.context)
+        val subthemes = ObjectSelect.query(Subtheme::class.java).where(Subtheme.THEME.dot(Theme.NAME).eq(themeName)).select(OrmManager.newContext())
         return subthemes
     }
 

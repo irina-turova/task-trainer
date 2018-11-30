@@ -18,7 +18,7 @@ fun User.initWithJson(json: String) {
     this.middleName = jsonAsMap["middleName"]
     this.login = jsonAsMap["login"]
     this.rating = 0.0
-    this.role = Cayenne.objectForPK(OrmManager.context, Role::class.java,3)
+    this.role = Cayenne.objectForPK(OrmManager.newContext(), Role::class.java,3)
 
     this.salt = DigestUtils.md5Hex(UUID.randomUUID().toString())
     this.password = SecurityManager.getPasswordHash(jsonAsMap["password"] ?: "", this.salt)
