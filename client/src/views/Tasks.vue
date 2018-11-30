@@ -49,7 +49,17 @@
             </v-flex>
         </v-layout>
 
-        <v-layout>
+        <v-layout row>
+            <v-flex v-if="task === undefined" xs12 ma-2>
+                <v-alert
+                        :value="true"
+                        color="info"
+                        icon="fas fa-info"
+                        outline
+                >
+                    В этой подтеме больше нет доступных задач!
+                </v-alert>
+            </v-flex>
             <v-flex
                     v-if="task"
                     xs12
@@ -124,7 +134,6 @@
                 </v-card>
             </v-flex>
         </v-layout>
-
     </div>
 </template>
 
@@ -291,7 +300,7 @@
                     let res = await axios.get(`/api/tasks/${this.selectedSubtheme.name}/${this.selectedDifficulty.name}`)
                     console.log(res)
                     if (res.data === "") {
-                        this.task = null
+                        this.task = undefined
                         return
                     }
                     this.task = res.data;
