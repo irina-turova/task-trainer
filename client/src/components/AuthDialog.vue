@@ -106,6 +106,7 @@ export default {
 
     methods: {
         async submit () {
+            this.succeded = null
             if (this.$refs.form.validate()) {
                 const data = new FormData()
                 data.set('user', this.email)
