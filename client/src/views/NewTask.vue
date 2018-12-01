@@ -7,7 +7,7 @@
             {{ messageText }}
         </v-snackbar>
 
-        <v-form ref="form" v-model="valid">
+        <v-form ref="form" v-model="valid" @keypress.native.enter="createTask">
             <v-card>
                 <v-card-title>
                     <h3 class="headline mb-0">Создание новой задачи</h3>

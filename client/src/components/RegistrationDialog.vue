@@ -7,7 +7,7 @@
             <v-icon left>fas fa-user-plus</v-icon>Зарегистрироваться
         </v-btn>
 
-        <v-form ref="form" v-model="valid">
+        <v-form ref="form" v-model="valid" @keypress.native.enter="submit">
             <v-card>
                 <v-card-title
                         class="headline"

@@ -83,6 +83,7 @@
                                 placeholder="1.2"
                                 label="Ответ на задачу"
                                 v-model="actualAnswer"
+                                @keypress.native.enter="sendSolution"
                                 >
                         </v-text-field>
                         <v-card color="success" class="white--text"

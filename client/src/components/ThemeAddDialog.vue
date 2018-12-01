@@ -7,7 +7,7 @@
     >
         <v-btn :block="true" slot="activator" class="accent"><v-icon left>fas fa-plus</v-icon>Добавить {{accusativeName}}</v-btn>
 
-        <v-form ref="form" v-model="valid">
+        <v-form ref="form" v-model="valid" @keypress.native.enter="submit($event)">
             <v-card>
                 <v-card-title
                         class="headline"

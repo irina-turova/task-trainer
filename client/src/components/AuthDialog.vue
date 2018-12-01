@@ -1,10 +1,11 @@
 <template>
     <v-dialog
             v-model="dialog"
-            width="500">
+            width="500"
+    >
         <v-btn slot="activator" class="accent"><v-icon left>fas fa-sign-in-alt</v-icon>Войти</v-btn>
 
-        <v-form ref="form" v-model="valid">
+        <v-form ref="form" v-model="valid" @keypress.native.enter="submit">
             <v-card>
                 <v-card-title
                         class="headline"
