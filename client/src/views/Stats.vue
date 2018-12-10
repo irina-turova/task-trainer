@@ -9,7 +9,7 @@
                         :close-on-content-click="false"
                         v-model="startDateMenu"
                         :nudge-right="40"
-                        :return-value.sync="date"
+                        :return-value.sync="startDateMenu"
                         lazy
                         transition="scale-transition"
                         offset-y
@@ -20,12 +20,13 @@
                             slot="activator"
                             v-model="startDate"
                             label="Выберите дату начала"
+                            @change="getChartData"
                             readonly
                     ></v-text-field>
-                    <v-date-picker v-model="startDate" @change="validateDates" no-title scrollable>
+                    <v-date-picker v-model="startDate" @change="onDatePickerChange" no-title scrollable>
                         <v-spacer></v-spacer>
                         <v-btn flat color="primary" @click="startDateMenu = false">Cancel</v-btn>
-                        <v-btn flat color="primary" @click="$refs.menu.save(date)">OK</v-btn>
+                        <v-btn flat color="primary" @click="$refs.menuDateStart.save(startDateMenu)">OK</v-btn>
                     </v-date-picker>
                 </v-menu>
             </v-flex>
@@ -36,7 +37,7 @@
                         :close-on-content-click="false"
                         v-model="endDateMenu"
                         :nudge-right="40"
-                        :return-value.sync="date"
+                        :return-value.sync="endDateMenu"
                         lazy
                         transition="scale-transition"
                         offset-y
@@ -49,10 +50,10 @@
                             label="Выберите дату окончания"
                             readonly
                     ></v-text-field>
-                    <v-date-picker v-model="endDate" @change="validateDates" no-title scrollable>
+                    <v-date-picker v-model="endDate" @change="onDatePickerChange" no-title scrollable>
                         <v-spacer></v-spacer>
                         <v-btn flat color="primary" @click="endDateMenu = false">Cancel</v-btn>
-                        <v-btn flat color="primary" @click="$refs.menu.save(date)">OK</v-btn>
+                        <v-btn flat color="primary" @click="$refs.menuDateFinish.save(endDateMenu)">OK</v-btn>
                     </v-date-picker>
                 </v-menu>
             </v-flex>
@@ -62,7 +63,7 @@
 
         <v-flex px-2>
             <v-combobox
-                    v-model="selectedTheme"
+                    v-model="selectedThemes"
                     :items="themes"
                     item-text="description"
                     item-value="name"
@@ -74,7 +75,7 @@
             />
         </v-flex>
 
-        <v-flex v-if="selectedTheme && selectedTheme.length > 0">
+        <v-flex v-if="selectedThemes && selectedThemes.length > 0">
             <GChart
                 type="ColumnChart"
                 :data="chartData"
@@ -97,18 +98,13 @@
 
         data() {
             return {
-                // Array will be automatically processed with visualization.arrayToDataTable function
-                chartData: [
-                    ["Year", "Математика", "Физика", "Химия"],
-                    ["Пн", 1000, 400, 200],
-                    ["Вт", 1170, 460, 250],
-                    ["Ср", 660, 1120, 300],
-                    ["Чт", 1030, 540, 350]
-                ],
+                chartData: [],
                 chartOptions: {
                     chart: {
-                        title: "Company Performance",
-                        subtitle: "Sales, Expenses, and Profit: 2014-2017"
+                        title: "Task statistics",
+                        subtitle: "Solved tasks, right solved tasks",
+                        colors: ['0000ff', '00ff00'],
+                        is3D: true
                     }
                 },
 
@@ -116,7 +112,7 @@
                 endDate : new Date().toISOString().substr(0, 10),
                 startDateMenu: false,
                 endDateMenu: false,
-                selectedTheme: null,
+                selectedThemes: null,
                 themes: null,
                 themesLoading: false,
             };
@@ -133,51 +129,54 @@
         methods: {
             async fetch() {
                 if (!this.themes)
-                    await this.getThemes()
+                    await this.getThemes();
 
             },
 
             async getThemes() {
-                this.themesLoading = true
+                this.themesLoading = true;
                 try {
-                    let res = await axios.get('/api/themes')
+                    let res = await axios.get('/api/themes');
                     this.themes = res.data;
                 } catch(e) {
                     if (e.response) {
-                        alert(e.response.data)
+                        alert(e.response.data);
                     } else {
-                        alert(e.message)
+                        alert(e.message);
                     }
                 }
-                this.themesLoading = false
+                this.themesLoading = false;
             },
 
             async getChartData(){
-                if (!(this.selectedTheme && this.selectedTheme.length > 0)) return;
-
-                const params = {
-                    start: this.startDate,
-                    end: this.endDate,
-                    theme: this.themes
-                }
+                if (!(this.selectedThemes && this.selectedThemes.length > 0)) return;
+                
+                console.log("Getting chart data...");
 
                 try {
-                    let res = await axios.get('/api/stats', params)
+                    let res = await axios.get(`/api/stats/${this.startDate}/${this.endDate}/${this.selectedThemes.map((x) => x.name)}`);
+                    console.log(res);
+                    console.log(res.data);
                     this.chartData = res.data;
                 } catch(e) {
                     if (e.response) {
-                        alert(e.response.data)
+                        console.log(e.response.data);
                     } else {
-                        alert(e.message)
+                        console.log(e.message);
                     }
                 }
 
             },
 
-            validateDates(){
+            validateDates() {
                 if (this.startDate > this.endDate) { 
-                    this.endDate = this.startDate 
+                    this.endDate = this.startDate;
                 }
+            },
+
+            onDatePickerChange() {
+                this.validateDates();
+                this.getChartData();
             }
         }
     };

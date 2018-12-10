@@ -1,7 +1,7 @@
 <template>
     <v-app id="app">
         <v-toolbar app class="primary" dark>
-            <v-toolbar-title><v-icon>fas fa-user-graduate</v-icon> Тренажер</v-toolbar-title>
+            <v-toolbar-title @click="$router.push('/')" style="cursor: pointer"><v-icon>fas fa-user-graduate</v-icon> Тренажер</v-toolbar-title>
 
             <v-toolbar-items class="px-5">
 

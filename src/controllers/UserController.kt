@@ -1,5 +1,6 @@
 package com.trainer.controllers
 
+import apache.cayenne.mappings.Role
 import apache.cayenne.mappings.User
 import com.trainer.OrmManager
 import com.trainer.SecurityManager
@@ -11,6 +12,9 @@ import io.ktor.http.HttpStatusCode
 import org.apache.cayenne.Cayenne
 import org.apache.cayenne.CayenneRuntimeException
 import org.apache.cayenne.query.ObjectSelect
+import org.apache.cayenne.access.DataContext
+
+
 
 object UserController {
 
@@ -31,14 +35,18 @@ object UserController {
 
     fun store(json: String): Pair<HttpStatusCode, Any> {
         return try {
-            val ctx = OrmManager.newContext()
-            val user = ctx.newObject(User::class.java)
-            user.initWithJson(json)
+            val context = OrmManager.newContext()
+            val user = context.newObject(User::class.java)
+            user.initWithJson(json, context)
 
-            val emailUnique = ObjectSelect.query(User::class.java).where(User.LOGIN.eq(user.login))
-                .selectFirst(ctx) == null
+            val emailUnique =
+                ObjectSelect
+                    .query(User::class.java)
+                    .where(User.LOGIN.eq(user.login))
+                    .select(context).count() == 0
+
             if (emailUnique) {
-                ctx.commitChanges()
+                context.commitChanges()
                 Pair(HttpStatusCode(200, ""), user)
             } else
                 Pair(HttpStatusCode(422, ""), "Пользователь с таким email уже зарегистрирован")

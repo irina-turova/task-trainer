@@ -83,6 +83,8 @@
                                 placeholder="1.2"
                                 label="Ответ на задачу"
                                 v-model="actualAnswer"
+                                @change="onAnswerChange"
+                                @click="onAnswerChange"
                                 @keypress.native.enter="sendSolution"
                                 >
                         </v-text-field>
@@ -94,6 +96,18 @@
                             v-if="!isRightAnswer && actualAnswerSent">
                             <v-card-text>Неправильный ответ</v-card-text>
                         </v-card>
+                        <v-flex xs12 ma-2>
+                        <v-alert
+                                v-if="blankAnswer && triedToSend"
+                                hidden=true
+                                :value="true"
+                                color="info"
+                                icon="fas fa-info"
+                                outline
+                        >
+                            Введите Ваш ответ на задачу
+                        </v-alert>
+            </v-flex>
                     </v-card-text>
 
 
@@ -162,6 +176,8 @@
                 isRightAnswer: false,
                 taskImage: null,
                 solutionImage: null,
+                triedToSend: false,
+                blankAnswer: true
             }
         },
 
@@ -362,6 +378,14 @@
             },
 
             async sendSolution() {
+                this.triedToSend = true;
+                this.blankAnswer = this.actualAnswer == null;
+                console.log(this.triedToSend)
+                console.log(this.actualAnswer)
+                if (this.blankAnswer) {
+                    return;
+                }
+
                 var data = {
                     taskId: this.task.objectId.singleValue,
                     actualAnswer: this.actualAnswer,
@@ -395,6 +419,11 @@
                     .catch((error) => {
                         console.log(error);
                     }); 
+            },
+
+            onAnswerChange(){
+                this.triedToSend = false;
+                this.blankAnswer = false;
             }
         
         }
