@@ -23,7 +23,7 @@ fun Route.user() {
         form("login") {
             userParamName = "user"
             passwordParamName = "password"
-            challenge = FormAuthChallenge.Unauthorized
+            //challenge = FormAuthChallenge.Unauthorized
             validate { credentials -> UserController.find(credentials) }
         }
     }

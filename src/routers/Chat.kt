@@ -5,9 +5,7 @@ import com.trainer.LoginSession
 import com.trainer.UserData
 import com.trainer.controllers.UserController
 import io.ktor.application.install
-import io.ktor.http.cio.websocket.DefaultWebSocketSession
-import io.ktor.http.cio.websocket.Frame
-import io.ktor.http.cio.websocket.readText
+import io.ktor.http.cio.websocket.*
 import io.ktor.routing.Route
 import io.ktor.routing.application
 import io.ktor.routing.route

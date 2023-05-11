@@ -42,7 +42,7 @@ dependencies {
     compile "ch.qos.logback:logback-classic:$logback_version"
     compile "io.ktor:ktor-server-core:$ktor_version"
     compile "io.ktor:ktor-html-builder:$ktor_version"
-    compile "org.jetbrains:kotlin-css-jvm:1.0.0-pre.31-kotlin-1.2.41"
+    //compile "org.jetbrains:kotlin-css-jvm:1.0.0-pre.31-kotlin-1.2.41"
     compile "io.ktor:ktor-client-core:$ktor_version"
     compile "io.ktor:ktor-client-core-jvm:$ktor_version"
     compile "io.ktor:ktor-client-apache:$ktor_version"
@@ -60,52 +60,52 @@ dependencies {
     // compile cayenne.dependency('java8')
 }
 
-cgen {
-    client = false
-    mode = 'all'
-    overwrite = true
-    createPropertyNames = true
-}
-
-cdbimport {
-
-    dataSource {
-        driver 'com.mysql.jdbc.Driver'
-        url 'jdbc:mysql://46.229.215.196:3306/trainer?useSSL=false&allowPublicKeyRetrieval=true'
-        username 'root'
-        password 'root'
-    }
-
-    dbImport {
-        // additional settings
-        usePrimitives false
-        defaultPackage 'apache.cayenne.mappings'
-
-        // DB filter configuration
-        catalog 'trainer'
-
-        tableTypes 'TABLE', 'VIEW'
-    }
-}
-
-cdbgen {
-
-    adapter 'org.apache.cayenne.dba.mysql.MySQLAdapter'
-
-    dataSource {
-        driver 'com.mysql.cj.jdbc.Driver'
-        url 'jdbc:mysql://46.229.215.196:3306/trainer?useSSL=false&allowPublicKeyRetrieval=true'
-        username 'root'
-        password 'root'
-    }
+//cgen {
+//    client = false
+//    mode = 'all'
+//    overwrite = true
+//    createPropertyNames = true
+//}
 //
-//    dropTables true
-//    dropPK true
+//cdbimport {
 //
-//    createTables true
-//    createPK true
-//    createFK true
-}
-
-cgen.dependsOn cdbimport
-compileKotlin.dependsOn cgen
+//    dataSource {
+//        driver 'com.mysql.jdbc.Driver'
+//        url 'jdbc:mysql://localhost:3306/trainer-web-project?useSSL=false&allowPublicKeyRetrieval=true'
+//        username 'root'
+//        password 'root'
+//    }
+//
+//    dbImport {
+//        // additional settings
+//        usePrimitives false
+//        defaultPackage 'apache.cayenne.mappings'
+//
+//        // DB filter configuration
+//        catalog 'trainer'
+//
+//        tableTypes 'TABLE', 'VIEW'
+//    }
+//}
+//
+//cdbgen {
+//
+//    adapter 'org.apache.cayenne.dba.mysql.MySQLAdapter'
+//
+//    dataSource {
+//        driver 'com.mysql.cj.jdbc.Driver'
+//        url 'jdbc:mysql://localhost:3306/trainer-web-project?useSSL=false&allowPublicKeyRetrieval=true'
+//        username 'root'
+//        password 'root'
+//    }
+////
+////    dropTables true
+////    dropPK true
+////
+////    createTables true
+////    createPK true
+////    createFK true
+//}
+//
+//cgen.dependsOn cdbimport
+//compileKotlin.dependsOn cgen
