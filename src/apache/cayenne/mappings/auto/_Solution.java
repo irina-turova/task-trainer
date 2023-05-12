@@ -21,11 +21,6 @@ public abstract class _Solution extends BaseDataObject {
 
     private static final long serialVersionUID = 1L; 
 
-    public static final String ACTUAL_ANSWER_PROPERTY = "actualAnswer";
-    public static final String SOLUTION_DATE_TIME_PROPERTY = "solutionDateTime";
-    public static final String TASK_PROPERTY = "task";
-    public static final String USER1_PROPERTY = "user1";
-
     public static final String SOLUTION_ID_PK_COLUMN = "solution_id";
 
     public static final Property<String> ACTUAL_ANSWER = Property.create("actualAnswer", String.class);

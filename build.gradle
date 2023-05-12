@@ -52,7 +52,9 @@ dependencies {
     compile "io.ktor:ktor-websockets:$ktor_version"
 
     // https://mvnrepository.com/artifact/mysql/mysql-connector-java
-    compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.46'
+//    compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.46'
+    // https://mvnrepository.com/artifact/org.postgresql/postgresql
+    implementation group: 'org.postgresql', name: 'postgresql', version: '42.5.4'
 
     testCompile "io.ktor:ktor-server-tests:$ktor_version"
     testCompile "io.ktor:ktor-client-mock:$ktor_version"

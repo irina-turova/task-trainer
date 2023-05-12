@@ -20,30 +20,16 @@ public abstract class _Difficulty extends BaseDataObject {
 
     private static final long serialVersionUID = 1L; 
 
-    public static final String NAME_PROPERTY = "name";
-    public static final String DESCRIPTION_PROPERTY = "description";
-    public static final String TASKS_PROPERTY = "tasks";
-
     public static final String DIFFICULTY_ID_PK_COLUMN = "difficulty_id";
 
-    public static final Property<String> NAME = Property.create("name", String.class);
     public static final Property<String> DESCRIPTION = Property.create("description", String.class);
+    public static final Property<String> NAME = Property.create("name", String.class);
     public static final Property<List<Task>> TASKS = Property.create("tasks", List.class);
 
-    protected String name;
     protected String description;
+    protected String name;
 
     protected Object tasks;
-
-    public void setName(String name) {
-        beforePropertyWrite("name", this.name, name);
-        this.name = name;
-    }
-
-    public String getName() {
-        beforePropertyRead("name");
-        return this.name;
-    }
 
     public void setDescription(String description) {
         beforePropertyWrite("description", this.description, description);
@@ -53,6 +39,16 @@ public abstract class _Difficulty extends BaseDataObject {
     public String getDescription() {
         beforePropertyRead("description");
         return this.description;
+    }
+
+    public void setName(String name) {
+        beforePropertyWrite("name", this.name, name);
+        this.name = name;
+    }
+
+    public String getName() {
+        beforePropertyRead("name");
+        return this.name;
     }
 
     public void addToTasks(Task obj) {
@@ -75,10 +71,10 @@ public abstract class _Difficulty extends BaseDataObject {
         }
 
         switch(propName) {
-            case "name":
-                return this.name;
             case "description":
                 return this.description;
+            case "name":
+                return this.name;
             case "tasks":
                 return this.tasks;
             default:
@@ -93,11 +89,11 @@ public abstract class _Difficulty extends BaseDataObject {
         }
 
         switch (propName) {
-            case "name":
-                this.name = (String)val;
-                break;
             case "description":
                 this.description = (String)val;
+                break;
+            case "name":
+                this.name = (String)val;
                 break;
             case "tasks":
                 this.tasks = val;
@@ -118,16 +114,16 @@ public abstract class _Difficulty extends BaseDataObject {
     @Override
     protected void writeState(ObjectOutputStream out) throws IOException {
         super.writeState(out);
-        out.writeObject(this.name);
         out.writeObject(this.description);
+        out.writeObject(this.name);
         out.writeObject(this.tasks);
     }
 
     @Override
     protected void readState(ObjectInputStream in) throws IOException, ClassNotFoundException {
         super.readState(in);
-        this.name = (String)in.readObject();
         this.description = (String)in.readObject();
+        this.name = (String)in.readObject();
         this.tasks = in.readObject();
     }
 

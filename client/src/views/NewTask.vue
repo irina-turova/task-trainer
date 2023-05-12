@@ -278,7 +278,7 @@ export default {
 
             this.difficultiesLoading = true
             try {
-                let res = await axios.get(`/api/difficulties/`)
+                let res = await axios.get(`/api/difficulties`)
                 this.difficulties = res.data
             } catch (e) {
                 if (e.response) {

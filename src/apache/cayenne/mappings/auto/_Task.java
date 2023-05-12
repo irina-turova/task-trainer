@@ -24,41 +24,40 @@ public abstract class _Task extends BaseDataObject {
 
     private static final long serialVersionUID = 1L; 
 
-    public static final String NAME_PROPERTY = "name";
-    public static final String TEXT_PROPERTY = "text";
-    public static final String RIGHT_ANSWER_PROPERTY = "rightAnswer";
-    public static final String EXPLANATION_PROPERTY = "explanation";
-    public static final String SOLUTIONS_PROPERTY = "solutions";
-    public static final String IMAGE_PROPERTY = "image";
-    public static final String IMAGE1_PROPERTY = "image1";
-    public static final String DIFFICULTY_PROPERTY = "difficulty";
-    public static final String USER_PROPERTY = "user";
-    public static final String SUBTHEME1_PROPERTY = "subtheme1";
-
     public static final String TASK_ID_PK_COLUMN = "task_id";
 
-    public static final Property<String> NAME = Property.create("name", String.class);
-    public static final Property<String> TEXT = Property.create("text", String.class);
-    public static final Property<String> RIGHT_ANSWER = Property.create("rightAnswer", String.class);
     public static final Property<String> EXPLANATION = Property.create("explanation", String.class);
-    public static final Property<List<Solution>> SOLUTIONS = Property.create("solutions", List.class);
+    public static final Property<String> NAME = Property.create("name", String.class);
+    public static final Property<String> RIGHT_ANSWER = Property.create("rightAnswer", String.class);
+    public static final Property<String> TEXT = Property.create("text", String.class);
+    public static final Property<Difficulty> DIFFICULTY = Property.create("difficulty", Difficulty.class);
     public static final Property<Image> IMAGE = Property.create("image", Image.class);
     public static final Property<Image> IMAGE1 = Property.create("image1", Image.class);
-    public static final Property<Difficulty> DIFFICULTY = Property.create("difficulty", Difficulty.class);
-    public static final Property<User> USER = Property.create("user", User.class);
+    public static final Property<List<Solution>> SOLUTIONS = Property.create("solutions", List.class);
     public static final Property<Subtheme> SUBTHEME1 = Property.create("subtheme1", Subtheme.class);
+    public static final Property<User> USER = Property.create("user", User.class);
 
-    protected String name;
-    protected String text;
-    protected String rightAnswer;
     protected String explanation;
+    protected String name;
+    protected String rightAnswer;
+    protected String text;
 
-    protected Object solutions;
+    protected Object difficulty;
     protected Object image;
     protected Object image1;
-    protected Object difficulty;
-    protected Object user;
+    protected Object solutions;
     protected Object subtheme1;
+    protected Object user;
+
+    public void setExplanation(String explanation) {
+        beforePropertyWrite("explanation", this.explanation, explanation);
+        this.explanation = explanation;
+    }
+
+    public String getExplanation() {
+        beforePropertyRead("explanation");
+        return this.explanation;
+    }
 
     public void setName(String name) {
         beforePropertyWrite("name", this.name, name);
@@ -68,16 +67,6 @@ public abstract class _Task extends BaseDataObject {
     public String getName() {
         beforePropertyRead("name");
         return this.name;
-    }
-
-    public void setText(String text) {
-        beforePropertyWrite("text", this.text, text);
-        this.text = text;
-    }
-
-    public String getText() {
-        beforePropertyRead("text");
-        return this.text;
     }
 
     public void setRightAnswer(String rightAnswer) {
@@ -90,27 +79,22 @@ public abstract class _Task extends BaseDataObject {
         return this.rightAnswer;
     }
 
-    public void setExplanation(String explanation) {
-        beforePropertyWrite("explanation", this.explanation, explanation);
-        this.explanation = explanation;
+    public void setText(String text) {
+        beforePropertyWrite("text", this.text, text);
+        this.text = text;
     }
 
-    public String getExplanation() {
-        beforePropertyRead("explanation");
-        return this.explanation;
+    public String getText() {
+        beforePropertyRead("text");
+        return this.text;
     }
 
-    public void addToSolutions(Solution obj) {
-        addToManyTarget("solutions", obj, true);
+    public void setDifficulty(Difficulty difficulty) {
+        setToOneTarget("difficulty", difficulty, true);
     }
 
-    public void removeFromSolutions(Solution obj) {
-        removeToManyTarget("solutions", obj, true);
-    }
-
-    @SuppressWarnings("unchecked")
-    public List<Solution> getSolutions() {
-        return (List<Solution>)readProperty("solutions");
+    public Difficulty getDifficulty() {
+        return (Difficulty)readProperty("difficulty");
     }
 
     public void setImage(Image image) {
@@ -129,20 +113,17 @@ public abstract class _Task extends BaseDataObject {
         return (Image)readProperty("image1");
     }
 
-    public void setDifficulty(Difficulty difficulty) {
-        setToOneTarget("difficulty", difficulty, true);
+    public void addToSolutions(Solution obj) {
+        addToManyTarget("solutions", obj, true);
     }
 
-    public Difficulty getDifficulty() {
-        return (Difficulty)readProperty("difficulty");
+    public void removeFromSolutions(Solution obj) {
+        removeToManyTarget("solutions", obj, true);
     }
 
-    public void setUser(User user) {
-        setToOneTarget("user", user, true);
-    }
-
-    public User getUser() {
-        return (User)readProperty("user");
+    @SuppressWarnings("unchecked")
+    public List<Solution> getSolutions() {
+        return (List<Solution>)readProperty("solutions");
     }
 
     public void setSubtheme1(Subtheme subtheme1) {
@@ -153,6 +134,14 @@ public abstract class _Task extends BaseDataObject {
         return (Subtheme)readProperty("subtheme1");
     }
 
+    public void setUser(User user) {
+        setToOneTarget("user", user, true);
+    }
+
+    public User getUser() {
+        return (User)readProperty("user");
+    }
+
     @Override
     public Object readPropertyDirectly(String propName) {
         if(propName == null) {
@@ -160,26 +149,26 @@ public abstract class _Task extends BaseDataObject {
         }
 
         switch(propName) {
-            case "name":
-                return this.name;
-            case "text":
-                return this.text;
-            case "rightAnswer":
-                return this.rightAnswer;
             case "explanation":
                 return this.explanation;
-            case "solutions":
-                return this.solutions;
+            case "name":
+                return this.name;
+            case "rightAnswer":
+                return this.rightAnswer;
+            case "text":
+                return this.text;
+            case "difficulty":
+                return this.difficulty;
             case "image":
                 return this.image;
             case "image1":
                 return this.image1;
-            case "difficulty":
-                return this.difficulty;
-            case "user":
-                return this.user;
+            case "solutions":
+                return this.solutions;
             case "subtheme1":
                 return this.subtheme1;
+            case "user":
+                return this.user;
             default:
                 return super.readPropertyDirectly(propName);
         }
@@ -192,20 +181,20 @@ public abstract class _Task extends BaseDataObject {
         }
 
         switch (propName) {
+            case "explanation":
+                this.explanation = (String)val;
+                break;
             case "name":
                 this.name = (String)val;
-                break;
-            case "text":
-                this.text = (String)val;
                 break;
             case "rightAnswer":
                 this.rightAnswer = (String)val;
                 break;
-            case "explanation":
-                this.explanation = (String)val;
+            case "text":
+                this.text = (String)val;
                 break;
-            case "solutions":
-                this.solutions = val;
+            case "difficulty":
+                this.difficulty = val;
                 break;
             case "image":
                 this.image = val;
@@ -213,14 +202,14 @@ public abstract class _Task extends BaseDataObject {
             case "image1":
                 this.image1 = val;
                 break;
-            case "difficulty":
-                this.difficulty = val;
-                break;
-            case "user":
-                this.user = val;
+            case "solutions":
+                this.solutions = val;
                 break;
             case "subtheme1":
                 this.subtheme1 = val;
+                break;
+            case "user":
+                this.user = val;
                 break;
             default:
                 super.writePropertyDirectly(propName, val);
@@ -238,31 +227,31 @@ public abstract class _Task extends BaseDataObject {
     @Override
     protected void writeState(ObjectOutputStream out) throws IOException {
         super.writeState(out);
-        out.writeObject(this.name);
-        out.writeObject(this.text);
-        out.writeObject(this.rightAnswer);
         out.writeObject(this.explanation);
-        out.writeObject(this.solutions);
+        out.writeObject(this.name);
+        out.writeObject(this.rightAnswer);
+        out.writeObject(this.text);
+        out.writeObject(this.difficulty);
         out.writeObject(this.image);
         out.writeObject(this.image1);
-        out.writeObject(this.difficulty);
-        out.writeObject(this.user);
+        out.writeObject(this.solutions);
         out.writeObject(this.subtheme1);
+        out.writeObject(this.user);
     }
 
     @Override
     protected void readState(ObjectInputStream in) throws IOException, ClassNotFoundException {
         super.readState(in);
-        this.name = (String)in.readObject();
-        this.text = (String)in.readObject();
-        this.rightAnswer = (String)in.readObject();
         this.explanation = (String)in.readObject();
-        this.solutions = in.readObject();
+        this.name = (String)in.readObject();
+        this.rightAnswer = (String)in.readObject();
+        this.text = (String)in.readObject();
+        this.difficulty = in.readObject();
         this.image = in.readObject();
         this.image1 = in.readObject();
-        this.difficulty = in.readObject();
-        this.user = in.readObject();
+        this.solutions = in.readObject();
         this.subtheme1 = in.readObject();
+        this.user = in.readObject();
     }
 
 }
